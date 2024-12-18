@@ -1,0 +1,34 @@
+name: Preflight Test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Image build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Install OPM
+        run: |
+          make opm
+      
+      - name: Validate catalog
+        run: |
+          make validate-catalog
+
+      - name: Build image
+        run: |
+          make build-image
+
+      - name: Run and verify image
+        run: |
+          make run-image
+          make test-image
