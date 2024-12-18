@@ -1,0 +1,10 @@
+---
+schema: olm.channel
+name: "3.11"
+package: gatekeeper-operator
+entries:
+  - name: gatekeeper-operator.v3.11.1
+    skipRange: <3.11.0
+  - name: gatekeeper-operator.v3.11.2
+    replaces: gatekeeper-operator.v3.11.1
+    skipRange: <3.11.0
