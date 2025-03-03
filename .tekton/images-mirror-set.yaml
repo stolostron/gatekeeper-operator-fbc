@@ -5,12 +5,15 @@ metadata:
   name: gatekeeper-mirror-set
 spec:
   imageDigestMirrors:
-    - mirrors:
+    - mirrorSourcePolicy: AllowContactingSource
+      mirrors:
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-17/gatekeeper-operator-bundle-3-17
       source: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle
-    - mirrors:
+    - mirrorSourcePolicy: AllowContactingSource
+      mirrors:
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-17/gatekeeper-operator-3-17
       source: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator
-    - mirrors:
+    - mirrorSourcePolicy: AllowContactingSource
+      mirrors:
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-17/gatekeeper-3-17
       source: registry.redhat.io/gatekeeper/gatekeeper-rhel9
