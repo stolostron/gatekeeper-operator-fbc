@@ -1,0 +1,41 @@
+entries:
+  - name: gatekeeper-operator-product.v0.2.2
+  - name: gatekeeper-operator-product.v0.2.3
+  - name: gatekeeper-operator-product.v0.2.3-0.1655383639.p
+    replaces: gatekeeper-operator-product.v0.2.2
+    skips:
+      - gatekeeper-operator-product.v0.2.3
+  - name: gatekeeper-operator-product.v0.2.4
+  - name: gatekeeper-operator-product.v0.2.4-0.1666670065.p
+    replaces: gatekeeper-operator-product.v0.2.3-0.1655383639.p
+    skips:
+      - gatekeeper-operator-product.v0.2.4
+  - name: gatekeeper-operator-product.v0.2.5
+  - name: gatekeeper-operator-product.v0.2.5-0.1683051284.p
+    replaces: gatekeeper-operator-product.v0.2.4-0.1666670065.p
+    skips:
+      - gatekeeper-operator-product.v0.2.5
+  - name: gatekeeper-operator-product.v0.2.6
+  - name: gatekeeper-operator-product.v0.2.6-0.1697738427.p
+    replaces: gatekeeper-operator-product.v0.2.5-0.1683051284.p
+    skips:
+      - gatekeeper-operator-product.v0.2.6
+  - name: gatekeeper-operator-product.v3.11.1
+    replaces: gatekeeper-operator-product.v0.2.6-0.1697738427.p
+    skipRange: <3.11.0
+  - name: gatekeeper-operator-product.v3.11.2
+    skipRange: <3.11.0
+  - name: gatekeeper-operator-product.v3.11.2-0.1718224960.p
+    skipRange: <3.11.0
+  - name: gatekeeper-operator-product.v3.11.2-0.1721233953.p
+    skipRange: <3.11.0
+  - name: gatekeeper-operator-product.v3.11.2-0.1725401426.p
+    replaces: gatekeeper-operator-product.v3.11.1
+    skipRange: <3.11.0
+    skips:
+      - gatekeeper-operator-product.v3.11.2-0.1721233953.p
+      - gatekeeper-operator-product.v3.11.2-0.1718224960.p
+      - gatekeeper-operator-product.v3.11.2
+name: "3.11"
+package: gatekeeper-operator-product
+schema: olm.channel
