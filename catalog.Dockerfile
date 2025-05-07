@@ -1,12 +1,15 @@
-# The builder image is expected to contain /bin/opm (with serve subcommand)
-FROM quay.io/operator-framework/opm:latest as builder
+ARG OPM_IMAGE=quay.io/operator-framework/opm:latest
 
-# Copy FBC root into image at /configs and pre-populate serve cache
-ADD catalog/ /configs
+# The builder image is expected to contain /bin/opm (with serve subcommand)
+FROM ${OPM_IMAGE} as builder
+
+# Copy specified FBC catalog into image at /configs and pre-populate serve cache
+ARG INPUT_DIR
+COPY ./${INPUT_DIR}/ /configs/catalog/gatekeeper-operator-product
 RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 
 # The base image is expected to contain /bin/opm (with serve subcommand) and /bin/grpc_health_probe
-FROM quay.io/operator-framework/opm:latest
+FROM ${OPM_IMAGE}
 
 COPY --from=builder /configs /configs
 COPY --from=builder /tmp/cache /tmp/cache
