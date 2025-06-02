@@ -12,9 +12,12 @@ entries:
   - name: gatekeeper-operator-product.v3.14.3-0.1742934403.p
     skipRange: <3.14.3
   - name: gatekeeper-operator-product.v3.14.3-0.1744033158.p
+    skipRange: <3.14.3
+  - name: gatekeeper-operator-product.v3.14.3-0.1746550072.p
     replaces: gatekeeper-operator-product.v3.14.2
     skipRange: <3.14.3
     skips:
+      - gatekeeper-operator-product.v3.14.3-0.1744033158.p
       - gatekeeper-operator-product.v3.14.3-0.1742934403.p
       - gatekeeper-operator-product.v3.14.3-0.1740676608.p
       - gatekeeper-operator-product.v3.14.3

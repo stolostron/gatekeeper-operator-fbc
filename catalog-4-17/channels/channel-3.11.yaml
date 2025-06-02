@@ -33,9 +33,9 @@ entries:
     replaces: gatekeeper-operator-product.v3.11.1
     skipRange: <3.11.0
     skips:
+      - gatekeeper-operator-product.v3.11.2
       - gatekeeper-operator-product.v3.11.2-0.1721233953.p
       - gatekeeper-operator-product.v3.11.2-0.1718224960.p
-      - gatekeeper-operator-product.v3.11.2
 name: "3.11"
 package: gatekeeper-operator-product
 schema: olm.channel
