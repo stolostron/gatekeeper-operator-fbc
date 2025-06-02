@@ -6,7 +6,7 @@ Use the [build/fetch-catalog.sh](../build/fetch-catalog.sh) script to pulling fr
 index for the `gatekeeper-operator-product` operator package:
 
 ```bash
-REFETCH=true ./build/fetch-catalog.sh X.Y gatekeeper-operator-product
+./build/fetch-catalog.sh X.Y gatekeeper-operator-product
 ```
 
 ## Adding or removing OCP versions
