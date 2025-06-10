@@ -47,4 +47,20 @@ for bundle in "${oldest_catalog}"/bundles/*.yaml; do
 done
 
 # Sort catalog
-yq '.entries |= sort_by(.schema, .name) |= reverse' -i catalog-template.yaml
+yq '.entries |= (sort_by(.schema, .name) | reverse)' -i catalog-template.yaml
+yq '.entries |= 
+    [(.[] | select(.schema == "olm.package"))] + 
+   ([(.[] | select(.schema == "olm.channel"))] | sort_by(.name)) + 
+   ([(.[] | select(.schema == "olm.bundle"))] | sort_by(.name))' -i catalog-template.yaml
+
+# Fix sed issues on mac by using GSED
+OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+SED="sed"
+if [ "${OS}" == "darwin" ]; then
+  SED="gsed"
+fi
+
+# Replace the Konflux images with production images
+for file in catalog-template.yaml catalog-*/bundles/*.yaml; do
+  ${SED} -i -E 's%quay.io/redhat-user-workloads/[^@]+%registry.redhat.io/gatekeeper/gatekeeper-operator-bundle%g' "${file}"
+done
