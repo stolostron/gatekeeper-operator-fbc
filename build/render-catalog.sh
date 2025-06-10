@@ -35,3 +35,16 @@ for catalog_file in ${catalogs}; do
 done
 
 rm catalog-template-*.yaml
+
+# Use oldest catalog to populate bundle names for reference
+oldest_catalog=$(find catalog-* -type d | head -1)
+
+for bundle in "${oldest_catalog}"/bundles/*.yaml; do
+  bundle_image=$(yq '.image' "${bundle}")
+  bundle_name=$(yq '.name' "${bundle}")
+
+  yq '.entries[] |= select(.image == "'"${bundle_image}"'").name = "'"${bundle_name}"'"' -i catalog-template.yaml
+done
+
+# Sort catalog
+yq '.entries |= sort_by(.schema, .name) |= reverse' -i catalog-template.yaml
