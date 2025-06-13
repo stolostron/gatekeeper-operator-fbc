@@ -23,8 +23,15 @@ index for the `gatekeeper-operator-product` operator package:
 
 ## Updating the catalog entries
 
-1. Update the [`catalog-template.yaml`](../catalog-template.yaml) with the new catalog entries (for
-   example, any new channels, channel bundle entries, or bundles).
+1. Run the [`add-bundle.sh`](../build/add-bundle.sh) script to add catalog entries into
+   [`catalog-template.yaml`](../catalog-template.yaml) giving the Konflux bundle image as an
+   argument. The image can be found on the Konflux console in the Application in the Components tab.
+   For example:
+
+   ```shell
+   ./build/add-bundle.sh quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-X-Y/gatekeeper-operator-bundle-X-Y@sha256:<sha>
+   ```
+
 2. Pruning previous catalogs without compelling reason is not allowed since it's already been
    deployed to customers. However, we can prune catalogs for unreleased versions of OCP.
 
@@ -44,3 +51,8 @@ index for the `gatekeeper-operator-product` operator package:
    ```bash
    ./build/render-catalog.sh
    ```
+
+   **NOTE:** The catalog rendering replaces the Konflux image registry with the production Red Hat
+   registry so the `opm` CLI can no longer reach it if you try to generate the catalog again before
+   the image's release. In this case, you need to revert the bundle reference to the Konflux one for
+   the script to complete.
