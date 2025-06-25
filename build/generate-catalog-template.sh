@@ -24,9 +24,11 @@ for ocp in ${ocp_versions}; do
   cp -i -v "catalog-template-$(yq ".[\"${ocp}\"].version" drop-versions.yaml).yaml" "catalog-template-${ocp//./-}.yaml" || true
 done
 
+oldest_catalog=$(find catalog-template-v*.yaml | head -1)
+
 # Prune old X.Y channels
 echo "# Pruning channels:"
-for channel in $(yq '.entries[] | select(.schema == "olm.channel").name' catalog-template.yaml); do
+for channel in $(yq '.entries[] | select(.schema == "olm.channel").name' "${oldest_catalog}"); do
   echo "  Found channel: ${channel}"
   for ocp_version in ${ocp_versions}; do
     if shouldPrune "${ocp_version}" "${channel}"; then
@@ -37,7 +39,7 @@ for channel in $(yq '.entries[] | select(.schema == "olm.channel").name' catalog
     fi
 
     # Prune old bundles from channels
-    for entry in $(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'").entries[].name' catalog-template.yaml); do
+    for entry in $(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'").entries[].name' "${oldest_catalog}"); do
       version=${entry#*\.v}
       if shouldPrune "${ocp_version}" "${version}"; then
         echo "  - Pruning entry from OCP ${ocp_version}: ${entry}"
@@ -50,7 +52,7 @@ echo
 
 # Prune old bundles
 echo "# Pruning bundles:"
-for bundle_image in $(yq '.entries[] | select(.schema == "olm.bundle").image' catalog-template.yaml); do
+for bundle_image in $(yq '.entries[] | select(.schema == "olm.bundle").image' "${oldest_catalog}"); do
   bundle_version=$(skopeo inspect --override-os=linux --override-arch=amd64 "docker://${bundle_image}" | jq -r ".Labels.version")
   echo "  Found version: ${bundle_version}"
   pruned=0

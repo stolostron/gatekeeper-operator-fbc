@@ -24,32 +24,42 @@ echo "* Found bundle: ${bundle_digest}"
 echo "* Found version: ${bundle_version}"
 echo "* Found channels: ${bundle_channels}"
 
-if [[ -n $(yq '.entries[] | select(.image == "'"${bundle_image}"'")' catalog-template.yaml) ]]; then
-  echo "error: bundle entry already exists."
-  exit 1
-fi
-
-# Add bundle
-bundle_entry="
-  image: ${bundle_image}
-  schema: olm.bundle
-" yq '.entries += env(bundle_entry)' -i catalog-template.yaml
-
-# Add bundle to channels
-for channel in ${bundle_channels//,/ }; do
-  echo "  Adding to channel: ${channel}"
-  if [[ -z $(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'")' catalog-template.yaml) ]]; then
-    latest_channel=$(yq '.entries[] | select(.schema == "olm.channel").name' catalog-template.yaml | grep -v stable | sort --version-sort | tail -1)
-    new_channel=$(yq '.entries[] | select(.name == "'"${latest_channel}"'") | .name = "'"${channel}"'"' catalog-template.yaml)
-
-    echo "  Creating new ${channel} channel from ${latest_channel}"
-    new_channel=${new_channel} yq '.entries += env(new_channel)' -i catalog-template.yaml
+for template_file in catalog-template-v*.yaml; do
+  if [[ -n $(yq '.entries[] | select(.image == "*'"${bundle_digest}"'")' "${template_file}") ]]; then
+    echo "error: bundle entry already exists."
+    exit 1
   fi
 
-  replaces_version=$(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'").entries[-1].name' catalog-template.yaml)
-  channel_entry="
-  name: gatekeeper-operator-product.${bundle_version}
-  replaces: ${replaces_version}
-  skipRange: <${bundle_version#v}
-  " yq '.entries[] |= select(.schema == "olm.channel") |= select(.name == "'"${channel}"'").entries += env(channel_entry)' -i catalog-template.yaml
+  # Add y-stream to ImageDigestMirrorSet
+  y_stream=${bundle_version#v}
+  y_stream=${y_stream%.*}
+  y_stream=${y_stream//./-}
+  echo "Adding y-stream to ImageDigestMirrorSet: ${y_stream}"
+  yq '.spec.imageDigestMirrors[] |= .mirrors += [.mirrors[0] | sub("[0-9]-[0-9]{2}", "'"${y_stream}"'")]' -i .tekton/images-mirror-set.yaml
+  yq '.spec.imageDigestMirrors[].mirrors |= unique' -i .tekton/images-mirror-set.yaml
+
+  # Add bundle
+  bundle_entry="
+  image: ${bundle_image}
+  schema: olm.bundle
+  " yq '.entries += env(bundle_entry)' -i "${template_file}"
+
+  # Add bundle to channels
+  for channel in ${bundle_channels//,/ }; do
+    echo "  Adding to channel: ${channel}"
+    if [[ -z $(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'")' "${template_file}") ]]; then
+      latest_channel=$(yq '.entries[] | select(.schema == "olm.channel").name' "${template_file}" | grep -v stable | sort --version-sort | tail -1)
+      new_channel=$(yq '.entries[] | select(.name == "'"${latest_channel}"'") | .name = "'"${channel}"'"' "${template_file}")
+
+      echo "  Creating new ${channel} channel from ${latest_channel}"
+      new_channel=${new_channel} yq '.entries += env(new_channel)' -i "${template_file}"
+    fi
+
+    replaces_version=$(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'").entries[-1].name' "${template_file}")
+    channel_entry="
+    name: gatekeeper-operator-product.${bundle_version}
+    replaces: ${replaces_version}
+    skipRange: <${bundle_version#v}
+    " yq '.entries[] |= select(.schema == "olm.channel") |= select(.name == "'"${channel}"'").entries += env(channel_entry)' -i "${template_file}"
+  done
 done
