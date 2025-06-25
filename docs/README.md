@@ -15,7 +15,7 @@ index for the `gatekeeper-operator-product` operator package:
    [konflux-release-data](https://gitlab.cee.redhat.com/releng/konflux-release-data/-/tree/main/tenants-config/cluster/stone-prd-rh01/tenants/gatekeeper-tenant),
    adding or removing OCP versions as needed.
 2. If versions should be updated for an incoming or outgoing OCP version, update the
-   [drop-versions.json](../drop-versions.json) map, which maps an OCP version to the version of the
+   [drop-versions.yaml](../drop-versions.yaml) map, which maps an OCP version to the version of the
    operator that should be dropped from the catalog.
 3. Merge the PRs from Konflux corresponding to the addition or removal of the application. For
    additions, run the [pipeline-patch.sh](../.tekton/pipeline-patch.sh) script to patch the incoming
@@ -35,7 +35,7 @@ index for the `gatekeeper-operator-product` operator package:
 2. Pruning previous catalogs without compelling reason is not allowed since it's already been
    deployed to customers. However, we can prune catalogs for unreleased versions of OCP.
 
-   Update the OCP version <-> operator version map, [drop-versions.json](../drop-versions.json),
+   Update the OCP version <-> operator version map, [drop-versions.yaml](../drop-versions.yaml),
    with the version of the operator to drop for any unreleased OCP version.
 
 3. Run the [build/generate-catalog-template.sh](../build/generate-catalog-template.sh) to regenerate

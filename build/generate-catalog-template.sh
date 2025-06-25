@@ -8,20 +8,20 @@ if [[ $(basename "${PWD}") != "gatekeeper-operator-fbc" ]]; then
 fi
 
 echo "Using drop version OCP-Gatekeeper map:"
-jq '.' drop-versions.json
+yq '.' drop-versions.yaml
 
-ocp_versions=$(jq -r 'keys[]' drop-versions.json)
+ocp_versions=$(yq -r 'keys[]' drop-versions.yaml)
 
 shouldPrune() {
-  oldest_version="$(jq -r ".[\"${1}\"]" drop-versions.json).99"
+  oldest_version="$(yq ".[\"${1}\"].drop" drop-versions.yaml).99"
 
   [[ "$(printf "%s\n%s\n" "${2}" "${oldest_version}" | sort --version-sort | tail -1)" == "${oldest_version}" ]]
 
   return $?
 }
 
-for version in ${ocp_versions}; do
-  cp catalog-template.yaml "catalog-template-${version//./-}.yaml"
+for ocp in ${ocp_versions}; do
+  cp -i -v "catalog-template-$(yq ".[\"${ocp}\"].version" drop-versions.yaml).yaml" "catalog-template-${ocp//./-}.yaml" || true
 done
 
 # Prune old X.Y channels
@@ -63,7 +63,7 @@ for bundle_image in $(yq '.entries[] | select(.schema == "olm.bundle").image' ca
       ((pruned+=1))
     fi
   done
-  if ((pruned == $(jq 'keys | length' drop-versions.json))); then
+  if ((pruned == $(yq 'keys | length' drop-versions.yaml))); then
     echo "Nothing pruned--exiting."
     break
   fi

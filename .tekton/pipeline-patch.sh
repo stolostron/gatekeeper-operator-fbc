@@ -13,11 +13,11 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
 
   # Add image build-arg
   has_build_args=$(yq -o yaml '.spec.params | any_c(.name == "build-args")' "${konflux_file}")
-  catalog_version=$(jq -r 'keys[0]' "${dir}/../drop-versions.json")
+  catalog_version=$(yq 'keys[0]' "${dir}/../drop-versions.yaml")
 
   if [[ ${has_build_args} == false ]]; then
     version=$(echo "${konflux_file}" | grep -oE "[0-9]-[0-9]+")
-    for next_version in $(jq -r 'keys[]' "${dir}/../drop-versions.json"); do
+    for next_version in $(yq 'keys[]' "${dir}/../drop-versions.yaml"); do
       if [[ "${version//-/.}" == "${next_version}" ]]; then
         catalog_version=${next_version}
       fi
