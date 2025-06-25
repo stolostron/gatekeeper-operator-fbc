@@ -14,7 +14,7 @@ echo "Rendering catalog with olm.bundle.object for OCP <=4.16 ..."
 opm alpha render-template basic catalog-template-4-14.yaml -o=yaml >catalog-4-14.yaml
 #######################################
 
-catalog_templates=$(find catalog-template-*.yaml -not -name "catalog-template-4-14.yaml")
+catalog_templates=$(find catalog-template-[^v]*.yaml -not -name "catalog-template-4-14.yaml")
 
 for catalog_template in ${catalog_templates}; do
   echo "Rendering catalog with olm.csv.metadata with ${catalog_template} ..."
@@ -34,24 +34,26 @@ for catalog_file in ${catalogs}; do
   rm "${catalog_file}"
 done
 
-rm catalog-template-*.yaml
+rm catalog-template-[^v]*.yaml
 
 # Use oldest catalog to populate bundle names for reference
 oldest_catalog=$(find catalog-* -type d | head -1)
 
-for bundle in "${oldest_catalog}"/bundles/*.yaml; do
-  bundle_image=$(yq '.image' "${bundle}")
-  bundle_name=$(yq '.name' "${bundle}")
+for template_file in catalog-template-v*.yaml; do
+  for bundle in "${oldest_catalog}"/bundles/*.yaml; do
+    bundle_image=$(yq '.image' "${bundle}")
+    bundle_name=$(yq '.name' "${bundle}")
 
-  yq '.entries[] |= select(.image == "'"${bundle_image}"'").name = "'"${bundle_name}"'"' -i catalog-template.yaml
-done
+    yq '.entries[] |= select(.image == "'"${bundle_image}"'").name = "'"${bundle_name}"'"' -i "${template_file}"
+  done
 
-# Sort catalog
-yq '.entries |= (sort_by(.schema, .name) | reverse)' -i catalog-template.yaml
-yq '.entries |= 
+  # Sort catalog
+  yq '.entries |= (sort_by(.schema, .name) | reverse)' -i "${template_file}"
+  yq '.entries |= 
     [(.[] | select(.schema == "olm.package"))] + 
    ([(.[] | select(.schema == "olm.channel"))] | sort_by(.name)) + 
-   ([(.[] | select(.schema == "olm.bundle"))] | sort_by(.name))' -i catalog-template.yaml
+   ([(.[] | select(.schema == "olm.bundle"))] | sort_by(.name))' -i "${template_file}"
+done
 
 # Fix sed issues on mac by using GSED
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
@@ -61,6 +63,6 @@ if [ "${OS}" == "darwin" ]; then
 fi
 
 # Replace the Konflux images with production images
-for file in catalog-template.yaml catalog-*/bundles/*.yaml; do
+for file in catalog-template-v*.yaml catalog-*/bundles/*.yaml; do
   ${SED} -i -E 's%quay.io/redhat-user-workloads/[^@]+%registry.redhat.io/gatekeeper/gatekeeper-operator-bundle%g' "${file}"
 done
