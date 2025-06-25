@@ -1,5 +1,5 @@
 ---
-image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:233782742d7420121640a01e3a5808e2ea1a2980eb20144726af126321ab46d5
+image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:d17028832ea2e1cb00377c1f1ef118aec804634004ba3399ae1a22030ff9a16e
 name: gatekeeper-operator-product.v3.19.0
 package: gatekeeper-operator-product
 properties:
@@ -25,7 +25,7 @@ properties:
     value:
       data: eyJhcGlWZXJzaW9uIjoidjEiLCJraW5kIjoiU2VydmljZSIsIm1ldGFkYXRhIjp7ImNyZWF0aW9uVGltZXN0YW1wIjpudWxsLCJsYWJlbHMiOnsiY29udHJvbC1wbGFuZSI6ImdhdGVrZWVwZXItb3BlcmF0b3ItY29udHJvbGxlci1tYW5hZ2VyIn0sIm5hbWUiOiJnYXRla2VlcGVyLW9wZXJhdG9yLWNvbnRyb2xsZXItbWFuYWdlci1tZXRyaWNzLXNlcnZpY2UifSwic3BlYyI6eyJwb3J0cyI6W3sibmFtZSI6Imh0dHBzIiwicG9ydCI6ODQ0MywicHJvdG9jb2wiOiJUQ1AiLCJ0YXJnZXRQb3J0IjoiaHR0cHMifV0sInNlbGVjdG9yIjp7ImNvbnRyb2wtcGxhbmUiOiJnYXRla2VlcGVyLW9wZXJhdG9yLWNvbnRyb2xsZXItbWFuYWdlciJ9fSwic3RhdHVzIjp7ImxvYWRCYWxhbmNlciI6e319fQ==
 relatedImages:
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:233782742d7420121640a01e3a5808e2ea1a2980eb20144726af126321ab46d5
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:d17028832ea2e1cb00377c1f1ef118aec804634004ba3399ae1a22030ff9a16e
     name: ""
   - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:365a02d1105a11cc2615525de79f52f31213183bdc751525cdeb22488cfa2a07
     name: gatekeeper-operator
