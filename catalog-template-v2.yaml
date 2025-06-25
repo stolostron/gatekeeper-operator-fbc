@@ -330,75 +330,181 @@ entries:
       - name: gatekeeper-operator-product.v3.18.0
         replaces: gatekeeper-operator-product.v3.17.2
         skipRange: <3.18.0
+      - name: gatekeeper-operator-product.v3.19.0
+        replaces: gatekeeper-operator-product.v3.18.0
+        skipRange: <3.19.0
+    name: "3.19"
+    package: gatekeeper-operator-product
+    schema: olm.channel
+  - entries:
+      - name: gatekeeper-operator-product.v0.2.2
+      - name: gatekeeper-operator-product.v0.2.3
+        replaces: gatekeeper-operator-product.v0.2.2
+      - name: gatekeeper-operator-product.v0.2.4
+        replaces: gatekeeper-operator-product.v0.2.3
+      - name: gatekeeper-operator-product.v0.2.5
+        replaces: gatekeeper-operator-product.v0.2.4
+      - name: gatekeeper-operator-product.v0.2.6
+        replaces: gatekeeper-operator-product.v0.2.5
+      - name: gatekeeper-operator-product.v3.11.1
+        replaces: gatekeeper-operator-product.v0.2.6
+        skipRange: <3.11.0
+      - name: gatekeeper-operator-product.v3.14.0
+        replaces: gatekeeper-operator-product.v3.11.1
+        skipRange: <3.14.0
+      - name: gatekeeper-operator-product.v3.14.1
+        skipRange: <3.14.1
+      - name: gatekeeper-operator-product.v3.14.1-0.1718225063.p
+        skipRange: <3.14.1
+      - name: gatekeeper-operator-product.v3.14.1-0.1721316083.p
+        skipRange: <3.14.1
+      - name: gatekeeper-operator-product.v3.14.1-0.1725401504.p
+        skipRange: <3.14.1
+      - name: gatekeeper-operator-product.v3.14.1-0.1726638929.p
+        skipRange: <3.14.1
+      - name: gatekeeper-operator-product.v3.14.1-0.1727189868.p
+        replaces: gatekeeper-operator-product.v3.14.0
+        skipRange: <3.14.1
+        skips:
+          - gatekeeper-operator-product.v3.14.1-0.1726638929.p
+          - gatekeeper-operator-product.v3.14.1-0.1725401504.p
+          - gatekeeper-operator-product.v3.14.1-0.1721316083.p
+          - gatekeeper-operator-product.v3.14.1-0.1718225063.p
+          - gatekeeper-operator-product.v3.14.1
+      - name: gatekeeper-operator-product.v3.15.1
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1725401534.p
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1726639477.p
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+        replaces: gatekeeper-operator-product.v3.14.1-0.1727189868.p
+        skipRange: <3.15.1
+        skips:
+          - gatekeeper-operator-product.v3.15.1-0.1726639477.p
+          - gatekeeper-operator-product.v3.15.1-0.1725401534.p
+          - gatekeeper-operator-product.v3.15.1
+      - name: gatekeeper-operator-product.v3.17.0
+        replaces: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+        skipRange: <3.17.0
+      - name: gatekeeper-operator-product.v3.17.1
+        replaces: gatekeeper-operator-product.v3.17.0
+        skipRange: <3.17.1
+      - name: gatekeeper-operator-product.v3.17.2
+        replaces: gatekeeper-operator-product.v3.17.1
+        skipRange: <3.17.2
+      - name: gatekeeper-operator-product.v3.18.0
+        replaces: gatekeeper-operator-product.v3.17.2
+        skipRange: <3.18.0
+      - name: gatekeeper-operator-product.v3.19.0
+        replaces: gatekeeper-operator-product.v3.18.0
+        skipRange: <3.19.0
     name: stable
     package: gatekeeper-operator-product
     schema: olm.channel
   - image: registry.redhat.io/rhacm2/gatekeeper-operator-bundle@sha256:45d089924f550f50ed5c1e56b249bcd7aeb29ff502bb80b8bdf05bac8a3bc394
     schema: olm.bundle
+    name: gatekeeper-operator-product.v0.2.2
   - image: registry.redhat.io/rhacm2/gatekeeper-operator-bundle@sha256:35dcdb52a7990afff32bbf2454f1c856907562d15ca978163bfe54ac49fe6ffa
     schema: olm.bundle
+    name: gatekeeper-operator-product.v0.2.3
   - image: registry.redhat.io/rhacm2/gatekeeper-operator-bundle@sha256:2eaa1a0ba4303ecdfaf7870acf1e1f9e6240cf7b2367441966271bf40ecd5b05
     schema: olm.bundle
+    name: gatekeeper-operator-product.v0.2.4
   - image: registry.redhat.io/rhacm2/gatekeeper-operator-bundle@sha256:d619193027a1350c69291c2993c560a1d160c863cb1ff8ddb872662279df2523
     schema: olm.bundle
+    name: gatekeeper-operator-product.v0.2.5
   - image: registry.redhat.io/rhacm2/gatekeeper-operator-bundle@sha256:6935ac39d7885d9fac1e99f97c2a3e72f2297fef465c4420729d985605e55dc5
     schema: olm.bundle
+    name: gatekeeper-operator-product.v0.2.6
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:b93f36641f22929160e260bdf358c20b5c5e076ddf20f2d10dbee7e854a771d4
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.11.1
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:0bc0c68bc0af649eb3cad882ff91811d053a537b770edfa61adb2532c4638fa8
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.11.2
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:b41b9f4e0d3b0761e92a2b44293ae5eec4cf5c2c2bf3f7a124fe07369602cf30
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.11.2-0.1718224960.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:de58ea0c4d22bd52853b3610f948c5d1d638619740e1ec3c7e08691eeb4195fb
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.11.2-0.1721233953.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:3f7fc52c79f3e4ef7ddd6f5efc8eec1ee4836bbf2076e7dd5f68bb3b7c6e9d8f
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.11.2-0.1725401426.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:9e7acd76a5141fe16b3875d756ca779fefd457df6c10f1539974cdab0d24f059
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.0
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:1ebd692e7f0a12c2e17a3ad08763b5146a25943a7f70a99e4432d99ab46e9938
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.1
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:c199d4252feec64dcaa2127e7ebb0f9b892e399d0fd13d7489515e7314949129
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.1-0.1718225063.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:a291704ce1093b1b0941941c159f0eebe021d598dfd5d2482d6c55c7c15f377e
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.1-0.1721316083.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:4ff8dec681455a4ea84dbf248d76650eb5b1563a0f5e9231de9555f2f382eca0
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.1-0.1725401504.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:987920d5d3c0c3ac283075948e71560218b811c981ab7daa06820df0ffea3227
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.1-0.1726638929.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:609e1c370a881ebee845246df7430cea5dd10bdf6fe48077522322fb2b07d59b
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.1-0.1727189868.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:8d830a9a7ae3c14fbd1916dc769af2c9edf301a3686d7d099fe01d3043afcc97
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.2
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:e2a1515489022d6ae4a310f8a9c6432084ec6f0ca83e02401cbba17d99c5ec3c
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.3
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:a08c1866d1c69fe14f679e6c0aed3ff75ec76b57d35d32902b8adc6b1bff1f9c
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.3-0.1740676608.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:077ae95070800d6e1b77fcc1fcb4c8c6d076ea34988f91dffb2a28f2e0a8f004
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.3-0.1742934403.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:82c8f7b61dba6a839dc50b482e332d1c139aa7bfd4a336e7a6f7f72e80e120be
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.3-0.1744033158.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:34d4f950bce7863f15d5f1e7d6555a3ccf97ec31dc3ee140f68442890c4f0f96
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.14.3-0.1746550072.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5636ebdcb5b834b1b7caa332d916d135170903cb193ed1e3479b9f766a07f4fc
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:76676bc6d6d7abed65d6fdba0f57ae7910b9e687ce38cb5f99fc96a58296ec3a
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1-0.1725401534.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:90b49c60dba67550ee955f986c1082149e5c0ec9830643f2c7094e0258ace616
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1-0.1726639477.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:e63ddc6328561ab131f47d6b79ce56cdabd226e56bbf364d82192f0b41ca1d10
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1-0.1727189912.p
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:7e7c512681b82d120136c6598fa2bd75b491d2e9eabdf032ddd5eea6556574dd
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.2
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:9f6e54feb9b36b5ffe08ead26b17891902452eb28de0d64cf775d9fdc35309e7
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.3
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:96b77663961daea3a336b97e34e9412281bfb2727854dc970a69edd029b9af85
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.4
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:ccd77f704fd1928c5b254e26efc03183259070b1efaf30056f0f1a13361f03a4
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.17.0
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:99e72875ce523e94ed910a0ea149792bd4e3eb0bd53f048b42077a80ddc7a6c9
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.17.1
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:d96ab7824a0f334b595ec7034ce417ee81976d5617ce72fb693ad724483833fb
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.17.2
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:f1178734e784fa1e6078059ba898e975183ff1cb8feeaaa1fa041ca53f64116e
     schema: olm.bundle
+    name: gatekeeper-operator-product.v3.18.0
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:233782742d7420121640a01e3a5808e2ea1a2980eb20144726af126321ab46d5
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.19.0
 schema: olm.template.basic
