@@ -10,16 +10,19 @@ spec:
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-15/gatekeeper-operator-bundle-3-15
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-17/gatekeeper-operator-bundle-3-17
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-18/gatekeeper-operator-bundle-3-18
+        - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-19/gatekeeper-operator-bundle-3-19
       source: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle
     - mirrorSourcePolicy: AllowContactingSource
       mirrors:
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-15/gatekeeper-operator-3-15
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-17/gatekeeper-operator-3-17
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-18/gatekeeper-operator-3-18
+        - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-19/gatekeeper-operator-3-19
       source: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator
     - mirrorSourcePolicy: AllowContactingSource
       mirrors:
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-15/gatekeeper-3-15
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-17/gatekeeper-3-17
         - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-18/gatekeeper-3-18
+        - quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-19/gatekeeper-3-19
       source: registry.redhat.io/gatekeeper/gatekeeper-rhel9
