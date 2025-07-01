@@ -600,7 +600,7 @@ entries:
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:f1178734e784fa1e6078059ba898e975183ff1cb8feeaaa1fa041ca53f64116e
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.18.0
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:d17028832ea2e1cb00377c1f1ef118aec804634004ba3399ae1a22030ff9a16e
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:ea776d85d1b416da5dc9ac27244f761f1293b039e181b9353298c2fb0f027f2b
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.19.0
 schema: olm.template.basic
