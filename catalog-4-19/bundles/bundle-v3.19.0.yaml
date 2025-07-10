@@ -1,5 +1,5 @@
 ---
-image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:ea776d85d1b416da5dc9ac27244f761f1293b039e181b9353298c2fb0f027f2b
+image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5a8e3bc0e4297429f056eb229ba7c098186087108b81f90d358c4b0187890072
 name: gatekeeper-operator-product.v3.19.0
 package: gatekeeper-operator-product
 properties:
@@ -164,7 +164,7 @@ properties:
       provider:
         name: Red Hat
 relatedImages:
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:ea776d85d1b416da5dc9ac27244f761f1293b039e181b9353298c2fb0f027f2b
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5a8e3bc0e4297429f056eb229ba7c098186087108b81f90d358c4b0187890072
     name: ""
   - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:365a02d1105a11cc2615525de79f52f31213183bdc751525cdeb22488cfa2a07
     name: gatekeeper-operator
