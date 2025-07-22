@@ -1,0 +1,13 @@
+---
+entries:
+  - name: gatekeeper-operator-product.v3.17.0
+    skipRange: <3.17.0
+  - name: gatekeeper-operator-product.v3.17.1
+    replaces: gatekeeper-operator-product.v3.17.0
+    skipRange: <3.17.1
+  - name: gatekeeper-operator-product.v3.17.2
+    replaces: gatekeeper-operator-product.v3.17.1
+    skipRange: <3.17.2
+name: "3.17"
+package: gatekeeper-operator-product
+schema: olm.channel

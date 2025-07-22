@@ -1,0 +1,140 @@
+---
+entries:
+  - defaultChannel: stable
+    description: |
+      # Gatekeeper Operator
+
+      Supported through your
+      [Red Hat Advanced Cluster Management](https://catalog.redhat.com/software/container-stacks/detail/5ec54aa3535cb70ab8c02996)
+      or
+      [OpenShift Platform Plus](https://www.redhat.com/en/technologies/cloud-computing/openshift/platform-plus)
+      subscription, the Gatekeeper Operator installs
+      [Gatekeeper](https://open-policy-agent.github.io/gatekeeper/website/docs/), which integrates
+      [Open Policy Agent](https://www.openpolicyagent.org/docs/latest/) (OPA) with Kubernetes to provide a
+      comprehensive policy-based governance framework. Through
+      [admission controllers](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/),
+      teams can define, manage, and enforce guardrails that ensure only policy-compliant resources can be
+      deployed. These guardrails help maintain security, compliance, and operational best practices.
+    icon:
+      base64data: PHN2ZyBpZD0iZjc0ZTM5ZDEtODA2Yy00M2E0LTgyZGQtZjM3ZjM1NWQ4YWYzIiBkYXRhLW5hbWU9Ikljb24iIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDM2IDM2Ij4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLmE0MWM1MjM0LWExNGEtNGYzZC05MTYwLTQ0NzJiNzZkMDA0MCB7CiAgICAgICAgZmlsbDogI2UwMDsKICAgICAgfQogICAgPC9zdHlsZT4KICA8L2RlZnM+CiAgPGc+CiAgICA8cGF0aCBjbGFzcz0iYTQxYzUyMzQtYTE0YS00ZjNkLTkxNjAtNDQ3MmI3NmQwMDQwIiBkPSJNMjUsMTcuMzhIMjMuMjNhNS4yNyw1LjI3LDAsMCwwLTEuMDktMi42NGwxLjI1LTEuMjVhLjYyLjYyLDAsMSwwLS44OC0uODhsLTEuMjUsMS4yNWE1LjI3LDUuMjcsMCwwLDAtMi42NC0xLjA5VjExYS42Mi42MiwwLDEsMC0xLjI0LDB2MS43N2E1LjI3LDUuMjcsMCwwLDAtMi42NCwxLjA5bC0xLjI1LTEuMjVhLjYyLjYyLDAsMCwwLS44OC44OGwxLjI1LDEuMjVhNS4yNyw1LjI3LDAsMCwwLTEuMDksMi42NEgxMWEuNjIuNjIsMCwwLDAsMCwxLjI0aDEuNzdhNS4yNyw1LjI3LDAsMCwwLDEuMDksMi42NGwtMS4yNSwxLjI1YS42MS42MSwwLDAsMCwwLC44OC42My42MywwLDAsMCwuODgsMGwxLjI1LTEuMjVhNS4yNyw1LjI3LDAsMCwwLDIuNjQsMS4wOVYyNWEuNjIuNjIsMCwwLDAsMS4yNCwwVjIzLjIzYTUuMjcsNS4yNywwLDAsMCwyLjY0LTEuMDlsMS4yNSwxLjI1YS42My42MywwLDAsMCwuODgsMCwuNjEuNjEsMCwwLDAsMC0uODhsLTEuMjUtMS4yNWE1LjI3LDUuMjcsMCwwLDAsMS4wOS0yLjY0SDI1YS42Mi42MiwwLDAsMCwwLTEuMjRabS03LDQuNjhBNC4wNiw0LjA2LDAsMSwxLDIyLjA2LDE4LDQuMDYsNC4wNiwwLDAsMSwxOCwyMi4wNloiLz4KICAgIDxwYXRoIGNsYXNzPSJhNDFjNTIzNC1hMTRhLTRmM2QtOTE2MC00NDcyYjc2ZDAwNDAiIGQ9Ik0yNy45LDI4LjUyYS42Mi42MiwwLDAsMS0uNDQtLjE4LjYxLjYxLDAsMCwxLDAtLjg4LDEzLjQyLDEzLjQyLDAsMCwwLDIuNjMtMTUuMTkuNjEuNjEsMCwwLDEsLjMtLjgzLjYyLjYyLDAsMCwxLC44My4yOSwxNC42NywxNC42NywwLDAsMS0yLjg4LDE2LjYxQS42Mi42MiwwLDAsMSwyNy45LDI4LjUyWiIvPgogICAgPHBhdGggY2xhc3M9ImE0MWM1MjM0LWExNGEtNGYzZC05MTYwLTQ0NzJiNzZkMDA0MCIgZD0iTTI3LjksOC43M2EuNjMuNjMsMCwwLDEtLjQ0LS4xOUExMy40LDEzLjQsMCwwLDAsMTIuMjcsNS45MWEuNjEuNjEsMCwwLDEtLjgzLS4zLjYyLjYyLDAsMCwxLC4yOS0uODNBMTQuNjcsMTQuNjcsMCwwLDEsMjguMzQsNy42NmEuNjMuNjMsMCwwLDEtLjQ0LDEuMDdaIi8+CiAgICA8cGF0aCBjbGFzcz0iYTQxYzUyMzQtYTE0YS00ZjNkLTkxNjAtNDQ3MmI3NmQwMDQwIiBkPSJNNS4zNSwyNC42MmEuNjMuNjMsMCwwLDEtLjU3LS4zNUExNC42NywxNC42NywwLDAsMSw3LjY2LDcuNjZhLjYyLjYyLDAsMCwxLC44OC44OEExMy40MiwxMy40MiwwLDAsMCw1LjkxLDIzLjczYS42MS42MSwwLDAsMS0uMy44M0EuNDguNDgsMCwwLDEsNS4zNSwyNC42MloiLz4KICAgIDxwYXRoIGNsYXNzPSJhNDFjNTIzNC1hMTRhLTRmM2QtOTE2MC00NDcyYjc2ZDAwNDAiIGQ9Ik0xOCwzMi42MkExNC42NCwxNC42NCwwLDAsMSw3LjY2LDI4LjM0YS42My42MywwLDAsMSwwLS44OC42MS42MSwwLDAsMSwuODgsMCwxMy40MiwxMy40MiwwLDAsMCwxNS4xOSwyLjYzLjYxLjYxLDAsMCwxLC44My4zLjYyLjYyLDAsMCwxLS4yOS44M0ExNC42NywxNC42NywwLDAsMSwxOCwzMi42MloiLz4KICAgIDxwYXRoIGNsYXNzPSJhNDFjNTIzNC1hMTRhLTRmM2QtOTE2MC00NDcyYjc2ZDAwNDAiIGQ9Ik0zMCwyOS42MkgyN2EuNjIuNjIsMCwwLDEtLjYyLS42MlYyNmEuNjIuNjIsMCwwLDEsMS4yNCwwdjIuMzhIMzBhLjYyLjYyLDAsMCwxLDAsMS4yNFoiLz4KICAgIDxwYXRoIGNsYXNzPSJhNDFjNTIzNC1hMTRhLTRmM2QtOTE2MC00NDcyYjc2ZDAwNDAiIGQ9Ik03LDMwLjYyQS42Mi42MiwwLDAsMSw2LjM4LDMwVjI3QS42Mi42MiwwLDAsMSw3LDI2LjM4aDNhLjYyLjYyLDAsMCwxLDAsMS4yNEg3LjYyVjMwQS42Mi42MiwwLDAsMSw3LDMwLjYyWiIvPgogICAgPHBhdGggY2xhc3M9ImE0MWM1MjM0LWExNGEtNGYzZC05MTYwLTQ0NzJiNzZkMDA0MCIgZD0iTTI5LDkuNjJIMjZhLjYyLjYyLDAsMCwxLDAtMS4yNGgyLjM4VjZhLjYyLjYyLDAsMCwxLDEuMjQsMFY5QS42Mi42MiwwLDAsMSwyOSw5LjYyWiIvPgogICAgPHBhdGggY2xhc3M9ImE0MWM1MjM0LWExNGEtNGYzZC05MTYwLTQ0NzJiNzZkMDA0MCIgZD0iTTksMTAuNjJBLjYyLjYyLDAsMCwxLDguMzgsMTBWNy42Mkg2QS42Mi42MiwwLDAsMSw2LDYuMzhIOUEuNjIuNjIsMCwwLDEsOS42Miw3djNBLjYyLjYyLDAsMCwxLDksMTAuNjJaIi8+CiAgPC9nPgo8L3N2Zz4K
+      mediatype: image/svg+xml
+    name: gatekeeper-operator-product
+    schema: olm.package
+  - entries:
+      - name: gatekeeper-operator-product.v3.15.1
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1725401534.p
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1726639477.p
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+        skipRange: <3.15.1
+        skips:
+          - gatekeeper-operator-product.v3.15.1-0.1726639477.p
+          - gatekeeper-operator-product.v3.15.1-0.1725401534.p
+          - gatekeeper-operator-product.v3.15.1
+      - name: gatekeeper-operator-product.v3.15.2
+        replaces: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+        skipRange: <3.15.2
+      - name: gatekeeper-operator-product.v3.15.3
+        replaces: gatekeeper-operator-product.v3.15.2
+        skipRange: <3.15.3
+      - name: gatekeeper-operator-product.v3.15.4
+        replaces: gatekeeper-operator-product.v3.15.3
+        skipRange: <3.15.4
+    name: "3.15"
+    package: gatekeeper-operator-product
+    schema: olm.channel
+  - entries:
+      - name: gatekeeper-operator-product.v3.17.0
+        skipRange: <3.17.0
+      - name: gatekeeper-operator-product.v3.17.1
+        replaces: gatekeeper-operator-product.v3.17.0
+        skipRange: <3.17.1
+      - name: gatekeeper-operator-product.v3.17.2
+        replaces: gatekeeper-operator-product.v3.17.1
+        skipRange: <3.17.2
+    name: "3.17"
+    package: gatekeeper-operator-product
+    schema: olm.channel
+  - entries:
+      - name: gatekeeper-operator-product.v3.18.0
+        skipRange: <3.18.0
+    name: "3.18"
+    package: gatekeeper-operator-product
+    schema: olm.channel
+  - entries:
+      - name: gatekeeper-operator-product.v3.19.0
+        skipRange: <3.19.0
+    name: "3.19"
+    package: gatekeeper-operator-product
+    schema: olm.channel
+  - entries:
+      - name: gatekeeper-operator-product.v3.15.1
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1725401534.p
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1726639477.p
+        skipRange: <3.15.1
+      - name: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+        replaces: gatekeeper-operator-product.v3.14.1-0.1727189868.p
+        skipRange: <3.15.1
+        skips:
+          - gatekeeper-operator-product.v3.15.1-0.1726639477.p
+          - gatekeeper-operator-product.v3.15.1-0.1725401534.p
+          - gatekeeper-operator-product.v3.15.1
+      - name: gatekeeper-operator-product.v3.17.0
+        replaces: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+        skipRange: <3.17.0
+      - name: gatekeeper-operator-product.v3.17.1
+        replaces: gatekeeper-operator-product.v3.17.0
+        skipRange: <3.17.1
+      - name: gatekeeper-operator-product.v3.17.2
+        replaces: gatekeeper-operator-product.v3.17.1
+        skipRange: <3.17.2
+      - name: gatekeeper-operator-product.v3.18.0
+        replaces: gatekeeper-operator-product.v3.17.2
+        skipRange: <3.18.0
+      - name: gatekeeper-operator-product.v3.19.0
+        replaces: gatekeeper-operator-product.v3.18.0
+        skipRange: <3.19.0
+    name: stable
+    package: gatekeeper-operator-product
+    schema: olm.channel
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5636ebdcb5b834b1b7caa332d916d135170903cb193ed1e3479b9f766a07f4fc
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:76676bc6d6d7abed65d6fdba0f57ae7910b9e687ce38cb5f99fc96a58296ec3a
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1-0.1725401534.p
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:90b49c60dba67550ee955f986c1082149e5c0ec9830643f2c7094e0258ace616
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1-0.1726639477.p
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:e63ddc6328561ab131f47d6b79ce56cdabd226e56bbf364d82192f0b41ca1d10
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:7e7c512681b82d120136c6598fa2bd75b491d2e9eabdf032ddd5eea6556574dd
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.2
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:9f6e54feb9b36b5ffe08ead26b17891902452eb28de0d64cf775d9fdc35309e7
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.3
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:96b77663961daea3a336b97e34e9412281bfb2727854dc970a69edd029b9af85
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.15.4
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:ccd77f704fd1928c5b254e26efc03183259070b1efaf30056f0f1a13361f03a4
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.17.0
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:99e72875ce523e94ed910a0ea149792bd4e3eb0bd53f048b42077a80ddc7a6c9
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.17.1
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:d96ab7824a0f334b595ec7034ce417ee81976d5617ce72fb693ad724483833fb
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.17.2
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:f1178734e784fa1e6078059ba898e975183ff1cb8feeaaa1fa041ca53f64116e
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.18.0
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5a8e3bc0e4297429f056eb229ba7c098186087108b81f90d358c4b0187890072
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.19.0
+schema: olm.template.basic
