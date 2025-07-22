@@ -53,7 +53,8 @@ echo
 # Prune old bundles
 echo "# Pruning bundles:"
 for bundle_image in $(yq '.entries[] | select(.schema == "olm.bundle").image' "${oldest_catalog}"); do
-  bundle_version=$(skopeo inspect --override-os=linux --override-arch=amd64 "docker://${bundle_image}" | jq -r ".Labels.version")
+  package_name=$(yq '.entries[] | select(.schema == "olm.bundle") | select(.image == "'"${bundle_image}"'").name' "${oldest_catalog}")
+  bundle_version=${package_name//gatekeeper-operator-product./}
   echo "  Found version: ${bundle_version}"
   pruned=0
   for ocp_version in ${ocp_versions}; do
