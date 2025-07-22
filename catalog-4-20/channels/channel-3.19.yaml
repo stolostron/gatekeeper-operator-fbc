@@ -1,0 +1,7 @@
+---
+entries:
+  - name: gatekeeper-operator-product.v3.19.0
+    skipRange: <3.19.0
+name: "3.19"
+package: gatekeeper-operator-product
+schema: olm.channel
