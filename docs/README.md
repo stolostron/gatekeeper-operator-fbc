@@ -38,21 +38,9 @@ index for the `gatekeeper-operator-product` operator package:
    Update the OCP version <-> operator version map, [drop-versions.yaml](../drop-versions.yaml),
    with the version of the operator to drop for any unreleased OCP version.
 
-3. Run the [build/generate-catalog-template.sh](../build/generate-catalog-template.sh) to regenerate
-   the catalog template files:
+3. Run the [build/generate-catalog.sh](../build/generate-template.sh) to regenerate the
+   catalog template files and re-render the catalog for the template files:
 
    ```bash
-   ./build/generate-catalog-template.sh
+   ./build/generate-catalog.sh
    ```
-
-4. Run the [render-catalog.sh](../build/render-catalog.sh) script to re-render the catalog for the
-   template files:
-
-   ```bash
-   ./build/render-catalog.sh
-   ```
-
-   **NOTE:** The catalog rendering replaces the Konflux image registry with the production Red Hat
-   registry so the `opm` CLI can no longer reach it if you try to generate the catalog again before
-   the image's release. In this case, you need to revert the bundle reference to the Konflux one for
-   the script to complete.

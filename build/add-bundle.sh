@@ -63,3 +63,6 @@ for template_file in catalog-template-v*.yaml; do
     " yq '.entries[] |= select(.schema == "olm.channel") |= select(.name == "'"${channel}"'").entries += env(channel_entry)' -i "${template_file}"
   done
 done
+
+echo "* Adding bundle to image-stage.txt ..."
+echo "${bundle_image}" >> image-stage.txt
