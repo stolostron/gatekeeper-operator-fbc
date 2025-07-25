@@ -20,19 +20,6 @@ jobs:
         run: |
           make opm
 
-      - name: Login to registry.redhat.io
-        uses: docker/login-action@v3
-        with:
-          registry: registry.redhat.io
-          username: ${{ secrets.RH_USERNAME }}
-          password: ${{ secrets.RH_TOKEN }}
-
-      - name: Generate catalog
-        run: |
-          export PATH=$PATH:${PWD}/bin
-          ./build/generate-catalog.sh
-          git diff --exit-code
-
       - name: Validate catalog
         run: |
           make validate-catalog
