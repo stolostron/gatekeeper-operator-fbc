@@ -5,15 +5,34 @@ on:
     workflows:
       - Preflight Test
     types:
-      - completed
+      - requested
 
 jobs:
   generate:
     name: Generate catalog
     runs-on: ubuntu-latest
     steps:
+      - name: Update status
+        run: |
+          curl -L \
+          -X POST \
+          -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+          https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.event.workflow_run.head_sha }} \
+          -d '{
+            "state":"pending",
+            "target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+            "description":"",
+            "context":"${{ github.workflow }}"
+          }'
+
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Checkout the triggering workflow commit
+        run: |
+          git fetch origin "+refs/pull/*/head:refs/remotes/origin/pr/*"
+          git checkout ${{ github.event.workflow_run.head_commit.id }}
 
       - name: Install OPM
         run: |
@@ -28,10 +47,28 @@ jobs:
 
       - name: Generate catalog
         run: |
-          printf "=== Generating catalog for %s ===\n\n" "${{ github.ref_name }}"
+          if [[ ${{ github.event.workflow_run.event }} == "push" ]]; then
+            ref="${{ github.event.workflow_run.head_branch }}"
+          else
+            ref="${{ github.event.workflow_run.pull_requests[0].head.ref }}"
+          fi
+
+          echo "=== Generating catalog on ref ${ref} ==="
+          echo "SHA: ${{ github.event.workflow_run.head_sha }}"
+          echo "Message: ${{ github.event.workflow_run.head_commit.message }}"
+          echo "==="
+
           export PATH=$PATH:${PWD}/bin
           ./build/generate-catalog.sh
-          git diff --exit-code | tee ${GITHUB_STEP_SUMMARY}
+
+          echo "* Checking for changes..."
+          if ! (git diff --color --exit-code); then
+            echo "Failed: Regeneration required"
+            printf '# Generate diff:\n\n```\n%s\n```\n' "$(git diff)" >> ${GITHUB_STEP_SUMMARY}
+            exit 1
+          else
+            echo "Success!"
+          fi
 
       - name: Update status
         if: always()
@@ -40,7 +77,7 @@ jobs:
           -X POST \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.event.workflow_run.head_sha }} \
+          "https://api.github.com/repos/${{ github.repository }}/statuses/${{ github.event.workflow_run.head_sha }}" \
           -d '{
             "state":"${{ job.status }}",
             "target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",

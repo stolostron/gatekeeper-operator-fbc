@@ -1,0 +1,173 @@
+---
+image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5a8e3bc0e4297429f056eb229ba7c098186087108b81f90d358c4b0187890072
+name: gatekeeper-operator-product.v3.19.0
+package: gatekeeper-operator-product
+properties:
+  - type: olm.gvk
+    value:
+      group: operator.gatekeeper.sh
+      kind: Gatekeeper
+      version: v1alpha1
+  - type: olm.package
+    value:
+      packageName: gatekeeper-operator-product
+      version: 3.19.0
+  - type: olm.csv.metadata
+    value:
+      annotations:
+        alm-examples: |-
+          [
+            {
+              "apiVersion": "operator.gatekeeper.sh/v1alpha1",
+              "kind": "Gatekeeper",
+              "metadata": {
+                "name": "gatekeeper"
+              },
+              "spec": {
+                "validatingWebhook": "Enabled"
+              }
+            }
+          ]
+        capabilities: Basic Install
+        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:b7852e616b6f9e6a70b2fe13668cc03a487729f67ce9d148079a3c072e763c0b
+        features.operators.openshift.io/cnf: "false"
+        features.operators.openshift.io/cni: "false"
+        features.operators.openshift.io/csi: "false"
+        features.operators.openshift.io/disconnected: "true"
+        features.operators.openshift.io/fips-compliant: "true"
+        features.operators.openshift.io/proxy-aware: "false"
+        features.operators.openshift.io/tls-profiles: "false"
+        features.operators.openshift.io/token-auth-aws: "false"
+        features.operators.openshift.io/token-auth-azure: "false"
+        features.operators.openshift.io/token-auth-gcp: "false"
+        olm.skipRange: <3.19.0
+        operators.openshift.io/valid-subscription: '["OpenShift Platform Plus", "Red Hat Advanced Cluster Management for Kubernetes"]'
+        operators.operatorframework.io/builder: operator-sdk-v1.34.1
+        operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+        repository: https://github.com/stolostron/gatekeeper-operator
+        support: Red Hat
+      apiServiceDefinitions: {}
+      crdDescriptions:
+        owned:
+          - description: Gatekeeper is the schema for the gatekeepers API. Gatekeeper contains configurations for the Gatekeeper operator, which deploys Open Policy Agent Gatekeeper, a policy engine that enforces policies through admission controller webhooks. See https://github.com/open-policy-agent/gatekeeper.
+            displayName: Gatekeeper
+            kind: Gatekeeper
+            name: gatekeepers.operator.gatekeeper.sh
+            resources:
+              - kind: Deployment
+                name: gatekeeper-deployment
+                version: v1
+            specDescriptors:
+              - description: Affinity is a node affinity specification to add to the Gatekeeper deployment Pods. See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/.
+                displayName: Affinity
+                path: affinity
+              - description: Audit specifies the configuration for the Gatekeeper auditing function. See https://open-policy-agent.github.io/gatekeeper/website/docs/audit.
+                displayName: Audit Configuration
+                path: audit
+              - description: Config specifies configurations for the configs.config.gatekeeper.sh API, allowing high-level configuration of Gatekeeper.
+                displayName: Config Configuration
+                path: config
+              - description: Image specifies the configuration for handling Gatekeeper deployment images.
+                displayName: Image Configuration
+                path: image
+                x-descriptors:
+                  - urn:alm:descriptor:com.tectonic.ui:hidden
+              - description: MutatingWebhook specifies whether the Gatekeeper mutating admission webhook is enabled. The default value is Enabled. See https://open-policy-agent.github.io/gatekeeper/website/docs/mutation.
+                displayName: Mutating Webhook
+                path: mutatingWebhook
+              - description: NodeSelector is a map of node selectors to add to the Gatekeeper deployment Pods. See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/.
+                displayName: Node Selector
+                path: nodeSelector
+              - description: PodAnnotations is a map of additional annotations to be added to the Gatekeeper deployment Pods.
+                displayName: Pod Annotations
+                path: podAnnotations
+              - description: Tolerations is an array of tolerations to add to the Gatekeeper deployment Pods. See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/.
+                displayName: Tolerations
+                path: tolerations
+              - description: ValidatingWebhook specifies whether the Gatekeeper validating admission webhook is enabled. The default value is Enabled.
+                displayName: Validating Webhook
+                path: validatingWebhook
+              - description: Webhook specifies the configuration for the Gatekeeper admission webhook.
+                displayName: Webhook Config
+                path: webhook
+            version: v1alpha1
+      description: |
+        Open Policy Agent Gatekeeper enforces CRD-based policies.
+
+        Every organization has policies. Some are essential to meet governance and
+        legal requirements. Others help ensure adherence to best practices and
+        institutional conventions. Attempting to ensure compliance manually would be
+        error-prone and frustrating. Automating policy enforcement ensures
+        consistency, lowers development latency through immediate feedback, and
+        helps with agility by allowing developers to operate independently without
+        sacrificing compliance.
+
+        Kubernetes allows decoupling policy decisions from the inner workings of the
+        API Server by means of [admission controller webhooks](https://kubernetes.io/docs/reference/access-authn-authz/extensible-admission-controllers/), which are executed
+        whenever a resource is created, updated or deleted. Gatekeeper is a
+        validating and mutating webhook that enforces CRD-based policies executed
+        by [Open Policy Agent](https://github.com/open-policy-agent/opa), a policy
+        engine for Cloud Native environments hosted
+        by CNCF as a [graduated project](https://www.cncf.io/projects/open-policy-agent-opa/).
+
+        In addition to the admission scenario, Gatekeeper's audit functionality
+        allows administrators to see what resources are currently violating any
+        given policy.
+
+        Finally, Gatekeeper's engine is designed to be portable, allowing
+        administrators to detect and reject non-compliant commits to an
+        infrastructure-as-code system's source-of-truth, further strengthening
+        compliance efforts and preventing bad state from slowing down the
+        organization.
+
+        Gatekeeper has the following functionality:
+        * An extensible, parameterized policy library
+        * Native Kubernetes CRDs for instantiating the policy library (aka "constraints")
+        * Native Kubernetes CRDs for extending the policy library (aka "constraint templates")
+        * Audit functionality
+
+        For more information, see the [Gatekeeper documentation](https://open-policy-agent.github.io/gatekeeper/website/docs/).
+
+        ## Support & Troubleshooting
+
+        The Open Policy Agent Gatekeeper community collaborates on Slack
+        [#opa-gatekeeper](https://openpolicyagent.slack.com/archives/CDTN970AX).
+
+        Please report issues on the respective GitHub repositories for either
+        the [Gatekeeper Operator](https://github.com/stolostron/gatekeeper-operator/issues) or
+        [Gatekeeper](https://github.com/open-policy-agent/gatekeeper/issues) itself.
+      displayName: Gatekeeper Operator
+      installModes:
+        - supported: false
+          type: OwnNamespace
+        - supported: false
+          type: SingleNamespace
+        - supported: false
+          type: MultiNamespace
+        - supported: true
+          type: AllNamespaces
+      keywords:
+        - Gatekeeper
+      labels:
+        operatorframework.io/arch.amd64: supported
+        operatorframework.io/arch.arm64: supported
+        operatorframework.io/arch.ppc64le: supported
+        operatorframework.io/arch.s390x: supported
+        operatorframework.io/os.linux: supported
+      links:
+        - name: Gatekeeper Operator
+          url: https://github.com/stolostron/gatekeeper-operator
+      maintainers:
+        - email: acm-contact@redhat.com
+          name: acm-contact
+      maturity: alpha
+      provider:
+        name: Red Hat
+relatedImages:
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5a8e3bc0e4297429f056eb229ba7c098186087108b81f90d358c4b0187890072
+    name: ""
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:6dd31ad9a9396b6c90f1c8d8c0af3a833c978785cdeb12cc331e37850eb3db31
+    name: gatekeeper-operator
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:b7852e616b6f9e6a70b2fe13668cc03a487729f67ce9d148079a3c072e763c0b
+    name: gatekeeper
+schema: olm.bundle

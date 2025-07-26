@@ -1,0 +1,25 @@
+entries:
+  - name: gatekeeper-operator-product.v3.15.1
+    skipRange: <3.15.1
+  - name: gatekeeper-operator-product.v3.15.1-0.1725401534.p
+    skipRange: <3.15.1
+  - name: gatekeeper-operator-product.v3.15.1-0.1726639477.p
+    skipRange: <3.15.1
+  - name: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+    skipRange: <3.15.1
+    skips:
+      - gatekeeper-operator-product.v3.15.1-0.1726639477.p
+      - gatekeeper-operator-product.v3.15.1-0.1725401534.p
+      - gatekeeper-operator-product.v3.15.1
+  - name: gatekeeper-operator-product.v3.15.2
+    replaces: gatekeeper-operator-product.v3.15.1-0.1727189912.p
+    skipRange: <3.15.2
+  - name: gatekeeper-operator-product.v3.15.3
+    replaces: gatekeeper-operator-product.v3.15.2
+    skipRange: <3.15.3
+  - name: gatekeeper-operator-product.v3.15.4
+    replaces: gatekeeper-operator-product.v3.15.3
+    skipRange: <3.15.4
+name: "3.15"
+package: gatekeeper-operator-product
+schema: olm.channel
