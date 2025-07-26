@@ -4,16 +4,17 @@ metadata:
   annotations:
     build.appstudio.openshift.io/repo: https://github.com/stolostron/gatekeeper-operator-fbc?rev={{revision}}
     build.appstudio.redhat.com/commit_sha: '{{revision}}'
+    build.appstudio.redhat.com/pull_request_number: '{{pull_request_number}}'
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
-    pipelinesascode.tekton.dev/cancel-in-progress: 'false'
-    pipelinesascode.tekton.dev/max-keep-runs: '3'
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "main"
-  creationTimestamp:
+    pipelinesascode.tekton.dev/cancel-in-progress: "true"
+    pipelinesascode.tekton.dev/max-keep-runs: "3"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "pull_request" && target_branch == "main"
+  creationTimestamp: null
   labels:
-    appstudio.openshift.io/application: gatekeeper-operator-fbc-4-18
-    appstudio.openshift.io/component: gatekeeper-operator-fbc-4-18
+    appstudio.openshift.io/application: gatekeeper-operator-fbc-4-20
+    appstudio.openshift.io/component: gatekeeper-operator-fbc-4-20
     pipelines.appstudio.openshift.io/type: build
-  name: gatekeeper-operator-fbc-4-18-on-push
+  name: gatekeeper-operator-fbc-4-20-on-pull-request
   namespace: gatekeeper-tenant
 spec:
   params:
@@ -22,23 +23,22 @@ spec:
     - name: revision
       value: '{{revision}}'
     - name: output-image
-      value: quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-fbc-4-18:{{revision}}
+      value: quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-fbc-4-20:on-pr-{{revision}}
+    - name: image-expires-after
+      value: 5d
     - name: build-platforms
       value:
         - linux/x86_64
-        - linux/arm64
-        - linux/ppc64le
-        - linux/s390x
     - name: dockerfile
       value: catalog.Dockerfile
     - name: path-context
       value: .
     - name: hermetic
-      value: 'true'
+      value: "true"
     - name: build-args
       value:
-        - OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.18
-        - INPUT_DIR=catalog-4-17
+        - OPM_IMAGE=brew.registry.redhat.io/rh-osbs/openshift-ose-operator-registry-rhel9:v4.20
+        - INPUT_DIR=catalog-4-20
   pipelineSpec:
     description: |
       This pipeline is ideal for building and verifying [file-based catalogs](https://konflux-ci.dev/docs/end-to-end/building-olm/#building-the-file-based-catalog).
@@ -63,7 +63,7 @@ spec:
       - description: Source Repository URL
         name: git-url
         type: string
-      - default: ''
+      - default: ""
         description: Revision of the Source Repository
         name: revision
         type: string
@@ -78,30 +78,31 @@ spec:
         description: Path to the Dockerfile inside the context specified by parameter path-context
         name: dockerfile
         type: string
-      - default: 'false'
+      - default: "false"
         description: Force rebuild image
         name: rebuild
         type: string
-      - default: 'false'
+      - default: "false"
         description: Skip checks against built image
         name: skip-checks
         type: string
-      - default: 'true'
+      - default: "true"
         description: Execute the build with network isolation
         name: hermetic
         type: string
-      - default: ''
+      - default: ""
         description: Build dependencies to be prefetched by Cachi2
         name: prefetch-input
         type: string
-      - default: ''
+      - default: ""
         description: Image tag expiration time, time values could be something like 1h, 2d, 3w for hours, days, and weeks, respectively.
         name: image-expires-after
-      - default: 'false'
+        type: string
+      - default: "false"
         description: Build a source image.
         name: build-source-image
         type: string
-      - default: 'true'
+      - default: "true"
         description: Add built image into an OCI image index
         name: build-image-index
         type: string
@@ -109,7 +110,7 @@ spec:
         description: Array of --build-arg values ("arg=value" strings) for buildah
         name: build-args
         type: array
-      - default: ''
+      - default: ""
         description: Path to a file with build arguments for buildah, see https://www.mankier.com/1/buildah-build#--build-arg-file
         name: build-args-file
         type: string
@@ -119,16 +120,16 @@ spec:
         name: build-platforms
         type: array
     results:
-      - description: ''
+      - description: ""
         name: IMAGE_URL
         value: $(tasks.build-image-index.results.IMAGE_URL)
-      - description: ''
+      - description: ""
         name: IMAGE_DIGEST
         value: $(tasks.build-image-index.results.IMAGE_DIGEST)
-      - description: ''
+      - description: ""
         name: CHAINS-GIT_URL
         value: $(tasks.clone-repository.results.url)
-      - description: ''
+      - description: ""
         name: CHAINS-GIT_COMMIT
         value: $(tasks.clone-repository.results.commit)
     tasks:
@@ -174,7 +175,7 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
         workspaces:
           - name: basic-auth
             workspace: git-auth
@@ -235,7 +236,7 @@ spec:
           - name: CACHI2_ARTIFACT
             value: $(tasks.prefetch-dependencies.results.CACHI2_ARTIFACT)
           - name: IMAGE_APPEND_PLATFORM
-            value: 'true'
+            value: "true"
         runAfter:
           - clone-repository
         taskRef:
@@ -251,7 +252,7 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
       - name: build-image-index
         params:
           - name: IMAGE
@@ -280,7 +281,7 @@ spec:
           - input: $(tasks.init.results.build)
             operator: in
             values:
-              - 'true'
+              - "true"
       - name: deprecated-base-image-check
         params:
           - name: IMAGE_URL
@@ -302,7 +303,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: apply-tags
         params:
           - name: IMAGE_URL
@@ -341,7 +342,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: fbc-target-index-pruning-check
         params:
           - name: IMAGE_URL
@@ -367,7 +368,7 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
       - name: fbc-fips-check-oci-ta
         params:
           - name: image-digest
@@ -391,14 +392,14 @@ spec:
           - input: $(params.skip-checks)
             operator: in
             values:
-              - 'false'
+              - "false"
     workspaces:
       - name: git-auth
         optional: true
       - name: netrc
         optional: true
   taskRunTemplate:
-    serviceAccountName: build-pipeline-gatekeeper-operator-fbc-4-18
+    serviceAccountName: build-pipeline-gatekeeper-operator-fbc-4-20
   workspaces:
     - name: git-auth
       secret:
