@@ -14,12 +14,18 @@ index for the `gatekeeper-operator-product` operator package:
 1. Update
    [konflux-release-data](https://gitlab.cee.redhat.com/releng/konflux-release-data/-/tree/main/tenants-config/cluster/stone-prd-rh01/tenants/gatekeeper-tenant),
    adding or removing OCP versions as needed.
+
 2. If versions should be updated for an incoming or outgoing OCP version, update the
    [drop-versions.yaml](../drop-versions.yaml) map, which maps an OCP version to the version of the
    operator that should be dropped from the catalog.
-3. Merge the PRs from Konflux corresponding to the addition or removal of the application. For
-   additions, run the [pipeline-patch.sh](../.tekton/pipeline-patch.sh) script to patch the incoming
-   pipeline with relevant updates.
+
+3. Once PRs from Konflux corresponding to the addition or removal of the application are opened, for
+   additions, run the [`pipeline-patch.sh`](../build/pipeline-patch.sh) script to patch the incoming
+   pipeline with relevant updates:
+
+   ```shell
+   ./build/pipeline-patch.sh
+   ```
 
 ## Updating the catalog entries
 
