@@ -1,6 +1,16 @@
 #! /bin/bash
 
-dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.tekton" >/dev/null 2>&1 && pwd)"
+
+echo 'Reflowing Konflux files with `yq` ...'
+for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
+  yq '.' -i "${konflux_file}"
+done
+
+if ! git diff --exit-code --quiet; then
+  echo 'Changes detected after reflowing Konflux files with `yq`. Commit the changes before continuing.'
+  exit
+fi
 
 for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
   echo "Updating $(basename "${konflux_file}") ..."
@@ -13,7 +23,7 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
 
   # Add image build-arg
   has_build_args=$(yq -o yaml '.spec.params | any_c(.name == "build-args")' "${konflux_file}")
-  catalog_version=$(yq 'keys[0]' "${dir}/../drop-versions.yaml")
+  catalog_version=$(yq 'keys[-1]' "${dir}/../drop-versions.yaml")
 
   if [[ ${has_build_args} == false ]]; then
     version=$(echo "${konflux_file}" | grep -oE "[0-9]-[0-9]+")
