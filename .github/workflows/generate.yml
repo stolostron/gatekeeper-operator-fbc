@@ -83,6 +83,6 @@ jobs:
           -d '{
             "state":"${{ job.status }}",
             "target_url":"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
-            "description":"${status^}",
+            "description":"'"${status^}"'",
             "context":"${{ github.workflow }}"
           }'
