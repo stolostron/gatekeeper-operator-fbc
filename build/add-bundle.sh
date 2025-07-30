@@ -14,6 +14,8 @@ if [[ -z "${bundle_image}" ]]; then
   exit 1
 fi
 
+version=${2}
+
 # Parse bundle
 bundle_json=$(skopeo inspect --override-os=linux --override-arch=amd64 "docker://${bundle_image}")
 bundle_digest=$(echo "${bundle_json}" | jq -r ".Digest")
@@ -23,6 +25,11 @@ bundle_channels=$(echo "${bundle_json}" | jq -r '.Labels["operators.operatorfram
 echo "* Found bundle: ${bundle_digest}"
 echo "* Found version: ${bundle_version}"
 echo "* Found channels: ${bundle_channels}"
+echo "* Overriding version: ${version}"
+
+if [[ -n "${version}" ]]; then
+  bundle_version=${version}
+fi
 
 for template_file in catalog-template-v*.yaml; do
   if [[ -n $(yq '.entries[] | select(.image == "*'"${bundle_digest}"'")' "${template_file}") ]]; then
@@ -66,3 +73,6 @@ done
 
 echo "* Adding bundle to image-stage.txt ..."
 echo "${bundle_image}" >> image-stage.txt
+
+echo "* Regenerating catalog ..."
+./build/generate-catalog.sh
