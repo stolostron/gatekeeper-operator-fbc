@@ -180,9 +180,6 @@ entries:
       - name: gatekeeper-operator-product.v3.15.4
         replaces: gatekeeper-operator-product.v3.15.3
         skipRange: <3.15.4
-      - name: gatekeeper-operator-product.v3.15.5
-        replaces: gatekeeper-operator-product.v3.15.4
-        skipRange: <3.15.5
     name: "3.15"
     package: gatekeeper-operator-product
     schema: olm.channel
@@ -597,9 +594,6 @@ entries:
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:96b77663961daea3a336b97e34e9412281bfb2727854dc970a69edd029b9af85
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.15.4
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:554bff48ba845440dc0773167def33016b80985c408ee1b9f7a86f4ce4959c18
-    schema: olm.bundle
-    name: gatekeeper-operator-product.v3.15.5
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:ccd77f704fd1928c5b254e26efc03183259070b1efaf30056f0f1a13361f03a4
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.17.0
