@@ -1,6 +1,6 @@
 ---
-image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:9a3f5b6c403fb84c9cb93c9d7cf902c80990196983607c8ca568d4b558938e17
-name: gatekeeper-operator-product.v3.18.1
+image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:68fe21212c54efd1c7a1e6f68e554722ac7cb8ffc3f5d48d608ebcc0ac8be921
+name: gatekeeper-operator-product.v3.19.1
 package: gatekeeper-operator-product
 properties:
   - type: olm.gvk
@@ -11,7 +11,7 @@ properties:
   - type: olm.package
     value:
       packageName: gatekeeper-operator-product
-      version: 3.18.1
+      version: 3.19.1
   - type: olm.csv.metadata
     value:
       annotations:
@@ -29,7 +29,7 @@ properties:
             }
           ]
         capabilities: Basic Install
-        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:0803b7219ceff7aa676488eeba58607a19c9c18a2bb8eae8b3b16cfec411cb6e
+        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:583d63090eccf767cd3a1cc153a995c6102e02a49aee1579edc7645e2aca1202
         features.operators.openshift.io/cnf: "false"
         features.operators.openshift.io/cni: "false"
         features.operators.openshift.io/csi: "false"
@@ -40,7 +40,7 @@ properties:
         features.operators.openshift.io/token-auth-aws: "false"
         features.operators.openshift.io/token-auth-azure: "false"
         features.operators.openshift.io/token-auth-gcp: "false"
-        olm.skipRange: <3.18.1
+        olm.skipRange: <3.19.1
         operators.openshift.io/valid-subscription: '["OpenShift Platform Plus", "Red Hat Advanced Cluster Management for Kubernetes"]'
         operators.operatorframework.io/builder: operator-sdk-v1.34.1
         operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
@@ -164,10 +164,10 @@ properties:
       provider:
         name: Red Hat
 relatedImages:
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:9a3f5b6c403fb84c9cb93c9d7cf902c80990196983607c8ca568d4b558938e17
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:68fe21212c54efd1c7a1e6f68e554722ac7cb8ffc3f5d48d608ebcc0ac8be921
     name: ""
-  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:49726cb2702441305e8047b24054575170fb595cfe5ebf815cdbfdaa957b02f4
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:60ee347425c6cfb36f0e1e834b33cbb3d77aa2d6c89ac513216d0b9fc55d4b52
     name: gatekeeper-operator
-  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:0803b7219ceff7aa676488eeba58607a19c9c18a2bb8eae8b3b16cfec411cb6e
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:583d63090eccf767cd3a1cc153a995c6102e02a49aee1579edc7645e2aca1202
     name: gatekeeper
 schema: olm.bundle
