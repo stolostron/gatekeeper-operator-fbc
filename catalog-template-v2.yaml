@@ -339,6 +339,9 @@ entries:
       - name: gatekeeper-operator-product.v3.19.0
         replaces: gatekeeper-operator-product.v3.18.0
         skipRange: <3.19.0
+      - name: gatekeeper-operator-product.v3.19.1
+        replaces: gatekeeper-operator-product.v3.19.0
+        skipRange: <3.19.1
     name: "3.19"
     package: gatekeeper-operator-product
     schema: olm.channel
@@ -405,6 +408,9 @@ entries:
       - name: gatekeeper-operator-product.v3.19.0
         replaces: gatekeeper-operator-product.v3.18.0
         skipRange: <3.19.0
+      - name: gatekeeper-operator-product.v3.19.1
+        replaces: gatekeeper-operator-product.v3.19.0
+        skipRange: <3.19.1
     name: stable
     package: gatekeeper-operator-product
     schema: olm.channel
@@ -507,16 +513,19 @@ entries:
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:d96ab7824a0f334b595ec7034ce417ee81976d5617ce72fb693ad724483833fb
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.17.2
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:73f8ada0c99b96dbdd8996111efad6e6024c810c76b9537ffb0792e626b8063c
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5170255ecd45b9bb7a70abec0f6eeb0518bbc2871de759e468dd61a80261c0ad
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.17.3
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:f1178734e784fa1e6078059ba898e975183ff1cb8feeaaa1fa041ca53f64116e
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.18.0
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:f4fff344fe7ddf8ed2b4e969dbc1b99a2e994400a9ed28e7cca9836ed94c6cc2
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:9a3f5b6c403fb84c9cb93c9d7cf902c80990196983607c8ca568d4b558938e17
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.18.1
   - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:5a8e3bc0e4297429f056eb229ba7c098186087108b81f90d358c4b0187890072
     schema: olm.bundle
     name: gatekeeper-operator-product.v3.19.0
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:68fe21212c54efd1c7a1e6f68e554722ac7cb8ffc3f5d48d608ebcc0ac8be921
+    schema: olm.bundle
+    name: gatekeeper-operator-product.v3.19.1
 schema: olm.template.basic
