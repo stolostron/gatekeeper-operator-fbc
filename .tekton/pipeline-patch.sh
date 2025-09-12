@@ -5,6 +5,15 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
   echo "Updating $(basename "${konflux_file}") ..."
 
+  # Replace pipelineSpec with pipelineRef
+  yq 'del(.spec.pipelineSpec)' -i "${konflux_file}"
+  yq '.spec.pipelineRef = {
+    "resolver":"git",
+    "params":[
+    { "name":"url", "value":"https://github.com/stolostron/konflux-build-catalog.git" },
+    { "name":"revision", "value":"main" },
+    { "name":"pathInRepo", "value":"pipelines/common-fbc.yaml" }]}' -i "${konflux_file}"
+
   # Add hermetic build
   has_hermetic=$(yq -o yaml '.spec.params | any_c(.name == "hermetic")' "${konflux_file}")
   if [[ ${has_hermetic} == false ]]; then
@@ -13,14 +22,15 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
 
   # Add image build-arg
   has_build_args=$(yq -o yaml '.spec.params | any_c(.name == "build-args")' "${konflux_file}")
-  catalog_version=$(yq 'keys[0]' "${dir}/../drop-versions.yaml")
 
   if [[ ${has_build_args} == false ]]; then
     version=$(echo "${konflux_file}" | grep -oE "[0-9]-[0-9]+")
     for next_version in $(yq 'keys[]' "${dir}/../drop-versions.yaml"); do
-      if [[ "${version//-/.}" == "${next_version}" ]]; then
+      if [[ $(printf "%s\n%s\n" "${version//-/.}" "${next_version}" | sort --version-sort | tail -1) == "${next_version}" ]]; then
         catalog_version=${next_version}
+        break
       fi
+      catalog_version=${next_version}
     done
 
     yq '.spec.params |= . + [
