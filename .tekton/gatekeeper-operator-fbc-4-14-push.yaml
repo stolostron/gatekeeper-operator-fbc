@@ -10,7 +10,7 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "main"
   creationTimestamp:
   labels:
-    appstudio.openshift.io/application: gatekeeper-operator-fbc-4-14
+    appstudio.openshift.io/application: gatekeeper-operator-fbc
     appstudio.openshift.io/component: gatekeeper-operator-fbc-4-14
     pipelines.appstudio.openshift.io/type: build
   name: gatekeeper-operator-fbc-4-14-on-push
