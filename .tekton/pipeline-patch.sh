@@ -37,7 +37,7 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
       {
         "name":"build-args",
         "value":[
-          "OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v'"${version//-/.}"'",
+          "OPM_IMAGE=brew.registry.redhat.io/rh-osbs/openshift-ose-operator-registry-rhel9:v'"${version//-/.}"'",
           "INPUT_DIR=catalog-'"${catalog_version//./-}"'"
         ]
       }]' -i "${konflux_file}"
