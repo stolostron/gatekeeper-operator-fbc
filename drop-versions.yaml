@@ -10,3 +10,6 @@
 4.20:
   version: v3
   drop: 3.14
+4.21:
+  version: v3
+  drop: 3.15
