@@ -1,5 +1,5 @@
 ---
-image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:87008b05465796eed00bed0d7c9d76a6f2dab0c3fdb82bd2945018ea819deeb0
+image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:dc1d6e6e0712b7fe7834d15c9a66c7cdb34a3c5206c5ab03f617ef02da209b82
 name: gatekeeper-operator-product.v3.20.0
 package: gatekeeper-operator-product
 properties:
@@ -29,7 +29,7 @@ properties:
             }
           ]
         capabilities: Basic Install
-        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:daa7c92efaa3e981a730677b565aaaf1683a4fc66944b0c42a6361cd93ce1b1a
+        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:613e787591ae01c20e1e958a3e1af62acf0a65d6650ef0840e84c8c2d92216fb
         features.operators.openshift.io/cnf: "false"
         features.operators.openshift.io/cni: "false"
         features.operators.openshift.io/csi: "false"
@@ -205,10 +205,10 @@ properties:
       provider:
         name: Red Hat
 relatedImages:
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:87008b05465796eed00bed0d7c9d76a6f2dab0c3fdb82bd2945018ea819deeb0
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:dc1d6e6e0712b7fe7834d15c9a66c7cdb34a3c5206c5ab03f617ef02da209b82
     name: ""
-  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:b4d192af7c4e3afba2c4fa4317e1b1e2eb560edf78d1245bb0f9b9d2d1fc6a0f
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:fca90c5e768ede40ff0e35169e10e1719b7e69294b469cc9c0950eb99caad9e8
     name: gatekeeper-operator
-  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:daa7c92efaa3e981a730677b565aaaf1683a4fc66944b0c42a6361cd93ce1b1a
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:613e787591ae01c20e1e958a3e1af62acf0a65d6650ef0840e84c8c2d92216fb
     name: gatekeeper
 schema: olm.bundle
