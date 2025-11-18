@@ -54,7 +54,10 @@ for template_file in catalog-template-v*.yaml; do
   # Add bundle to channels
   for channel in ${bundle_channels//,/ }; do
     echo "  Adding to channel: ${channel}"
+    added_channel=false
+    latest_channel=""
     if [[ -z $(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'")' "${template_file}") ]]; then
+      added_channel=true
       latest_channel=$(yq '.entries[] | select(.schema == "olm.channel").name' "${template_file}" | grep -v stable | sort --version-sort | tail -1)
       new_channel=$(yq '.entries[] | select(.name == "'"${latest_channel}"'") | .name = "'"${channel}"'"' "${template_file}")
 
@@ -68,6 +71,10 @@ for template_file in catalog-template-v*.yaml; do
     replaces: ${replaces_version}
     skipRange: <${bundle_version#v}
     " yq '.entries[] |= select(.schema == "olm.channel") |= select(.name == "'"${channel}"'").entries += env(channel_entry)' -i "${template_file}"
+
+    if ${added_channel}; then
+      yq '.entries[] |= select(.name == "'"${channel}"'").entries |= .[-1:]' -i "${template_file}"
+    fi
   done
 done
 
