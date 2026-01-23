@@ -22,6 +22,7 @@ opm: $(OPM)
 		download_url=$$(printf '%s\n' "$${current_release_json}" | jq -r '.assets[] | select(.name == "$(GOOS)-$(GOARCH)-opm").browser_download_url'); \
 		curl --fail -Lo $(OPM) $${download_url}; \
 		chmod +x $(OPM); \
+		$(OPM) version; \
 	fi
 
 .PHONY: validate-catalog

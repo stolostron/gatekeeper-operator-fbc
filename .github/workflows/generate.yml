@@ -29,21 +29,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      - name: Checkout the triggering workflow commit
-        run: |
-          git fetch origin "+refs/pull/*/head:refs/remotes/origin/pr/*"
-          git checkout ${{ github.event.workflow_run.head_commit.id }}
-
-      - name: Install OPM
-        run: |
-          make opm
-
       - name: Login to registry.redhat.io
         uses: docker/login-action@v3
         with:
           registry: registry.redhat.io
           username: ${{ secrets.RH_USERNAME }}
           password: ${{ secrets.RH_TOKEN }}
+
+      - name: Install OPM
+        run: |
+          make opm
+
+      - name: Checkout the triggering workflow commit
+        run: |
+          git fetch origin "+refs/pull/*/head:refs/remotes/origin/pr/*"
+          git checkout ${{ github.event.workflow_run.head_commit.id }}
 
       - name: Generate catalog
         run: |
@@ -59,7 +59,9 @@ jobs:
           echo "==="
 
           export PATH=$PATH:${PWD}/bin
+          git checkout origin/${{ github.event.workflow_run.head_branch }} -- ./build/generate-catalog.sh
           ./build/generate-catalog.sh
+          git restore ./build/generate-catalog.sh
 
           echo "* Checking for changes..."
           if ! (git diff --color --exit-code); then
