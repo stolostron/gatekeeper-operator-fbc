@@ -15,7 +15,7 @@ $(OPM):
 .PHONY: opm
 opm: $(OPM)
 	# Checking installation of opm
-	# Setting to v1.61.0 due to regression in v1.62.0: https://github.com/operator-framework/operator-registry/issues/1889
+	# Setting to v1.61.0 since v1.63.0 adds an unsupported release field to the olm.package in the bundle
 	@current_release_json=$$(curl -s "https://api.github.com/repos/operator-framework/operator-registry/releases/tags/v1.61.0"); \
 	current_release=$$(printf '%s\n' "$${current_release_json}" | jq -r '.tag_name'); \
 	if ! $(OPM) version || [ "$$($(OPM) version | grep -o "v[0-9]\+\.[0-9]\+\.[0-9]\+" | head -1)" != "$${current_release}" ]; then \
