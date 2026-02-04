@@ -46,22 +46,24 @@ jobs:
           git checkout ${{ github.event.workflow_run.head_commit.id }}
 
       - name: Generate catalog
+        env:
+          COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
         run: |
+          head_ref="${{ github.event.workflow_run.head_branch }}"
           if [[ ${{ github.event.workflow_run.event }} == "push" ]]; then
-            ref="${{ github.event.workflow_run.head_branch }}"
+            base_ref=${head_ref}
           else
-            ref="${{ github.event.workflow_run.pull_requests[0].head.ref }}"
+            base_ref="${{ github.event.workflow_run.pull_requests[0].base.ref }}"
           fi
 
-          echo "=== Generating catalog on ref ${ref} ==="
+          echo "=== Generating catalog on ref ${head_ref} ==="
           echo "SHA: ${{ github.event.workflow_run.head_sha }}"
-          echo "Message: ${{ github.event.workflow_run.head_commit.message }}"
+          printf 'Message: %s\n' "${COMMIT_MESSAGE}"
           echo "==="
 
           export PATH=$PATH:${PWD}/bin
-          git checkout origin/${{ github.event.workflow_run.head_branch }} -- ./build/generate-catalog.sh
+          git checkout origin/${base_ref} -- ./build/generate-catalog.sh
           ./build/generate-catalog.sh
-          git restore ./build/generate-catalog.sh
 
           echo "* Checking for changes..."
           if ! (git diff --color --exit-code); then
