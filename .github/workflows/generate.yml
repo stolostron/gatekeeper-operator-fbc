@@ -48,21 +48,15 @@ jobs:
       - name: Generate catalog
         env:
           COMMIT_MESSAGE: ${{ github.event.workflow_run.head_commit.message }}
+          HEAD_REF: ${{ github.event.workflow_run.head_branch }}
         run: |
-          head_ref="${{ github.event.workflow_run.head_branch }}"
-          if [[ ${{ github.event.workflow_run.event }} == "push" ]]; then
-            base_ref=${head_ref}
-          else
-            base_ref="${{ github.event.workflow_run.pull_requests[0].base.ref }}"
-          fi
-
-          echo "=== Generating catalog on ref ${head_ref} ==="
+          echo "=== Generating catalog on ref ${HEAD_REF} ==="
           echo "SHA: ${{ github.event.workflow_run.head_sha }}"
           printf 'Message: %s\n' "${COMMIT_MESSAGE}"
           echo "==="
 
           export PATH=$PATH:${PWD}/bin
-          git checkout origin/${base_ref} -- ./build/generate-catalog.sh
+          git checkout origin/main -- ./build/generate-catalog.sh
           ./build/generate-catalog.sh
 
           echo "* Checking for changes..."
