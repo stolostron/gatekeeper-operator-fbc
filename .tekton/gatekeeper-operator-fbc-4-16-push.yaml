@@ -8,7 +8,6 @@ metadata:
     pipelinesascode.tekton.dev/cancel-in-progress: 'false'
     pipelinesascode.tekton.dev/max-keep-runs: '3'
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "main"
-  creationTimestamp:
   labels:
     appstudio.openshift.io/application: gatekeeper-operator-fbc
     appstudio.openshift.io/component: gatekeeper-operator-fbc-4-16
@@ -31,10 +30,6 @@ spec:
         - linux/s390x
     - name: dockerfile
       value: catalog.Dockerfile
-    - name: path-context
-      value: .
-    - name: hermetic
-      value: 'true'
     - name: build-args
       value:
         - OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.16
@@ -54,4 +49,3 @@ spec:
     - name: git-auth
       secret:
         secretName: '{{ git_auth_secret }}'
-status: {}

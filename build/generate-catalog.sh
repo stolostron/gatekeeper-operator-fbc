@@ -7,6 +7,9 @@ if [[ $(basename "${PWD}") != "gatekeeper-operator-fbc" ]]; then
   exit 1
 fi
 
+OPM=./bin/opm
+make opm
+
 # Fix sed issues on mac by using GSED
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 SED="sed"
@@ -109,14 +112,14 @@ done
 
 ##### Special case for OCP <=4.16 #####
 echo "Rendering catalog with olm.bundle.object for OCP <=4.16 ..."
-opm alpha render-template basic catalog-template-4-14.yaml -o=yaml >catalog-4-14.yaml
+${OPM} alpha render-template basic catalog-template-4-14.yaml -o=yaml >catalog-4-14.yaml
 #######################################
 
 catalog_templates=$(find catalog-template-[^v]*.yaml -not -name "catalog-template-4-14.yaml")
 
 for catalog_template in ${catalog_templates}; do
   echo "Rendering catalog with olm.csv.metadata with ${catalog_template} ..."
-  opm alpha render-template basic "${catalog_template}" -o=yaml --migrate-level=bundle-object-to-csv-metadata >"${catalog_template//-template/}"
+  ${OPM} alpha render-template basic "${catalog_template}" -o=yaml --migrate-level=bundle-object-to-csv-metadata >"${catalog_template//-template/}"
 done
 
 # Decompose the catalog into files for consumability
