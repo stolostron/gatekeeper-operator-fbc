@@ -5,6 +5,10 @@ dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
   echo "Updating $(basename "${konflux_file}") ..."
 
+  # Clean up extra fields
+  yq 'del(.metadata.creationTimestamp)' -i "${konflux_file}"
+  yq 'del(.status)' -i "${konflux_file}"
+
   # Replace pipelineSpec with pipelineRef
   yq 'del(.spec.pipelineSpec)' -i "${konflux_file}"
   yq '.spec.pipelineRef = {
@@ -13,12 +17,6 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
     { "name":"url", "value":"https://github.com/stolostron/konflux-build-catalog.git" },
     { "name":"revision", "value":"main" },
     { "name":"pathInRepo", "value":"pipelines/common-fbc.yaml" }]}' -i "${konflux_file}"
-
-  # Add hermetic build
-  has_hermetic=$(yq -o yaml '.spec.params | any_c(.name == "hermetic")' "${konflux_file}")
-  if [[ ${has_hermetic} == false ]]; then
-    yq '.spec.params |= . + [{"name":"hermetic","value":"true"}]' -i "${konflux_file}"
-  fi
 
   # Add image build-arg
   has_build_args=$(yq -o yaml '.spec.params | any_c(.name == "build-args")' "${konflux_file}")
@@ -37,7 +35,7 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
       {
         "name":"build-args",
         "value":[
-          "OPM_IMAGE=brew.registry.redhat.io/rh-osbs/openshift-ose-operator-registry-rhel9:v'"${version//-/.}"'",
+          "OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v'"${version//-/.}"'",
           "INPUT_DIR=catalog-'"${catalog_version//./-}"'"
         ]
       }]' -i "${konflux_file}"

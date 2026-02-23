@@ -21,12 +21,15 @@ if [[ -z ${package} ]]; then
   exit 1
 fi
 
+OPM=./bin/opm
+make opm
+
 # Index image to pull from (set the OCP version tag as appropriate)
 catalog_image=registry.redhat.io/redhat/redhat-operator-index:v${ocp_version}
 
 # Pull the catalog from the image
-opm migrate -o=yaml "${catalog_image}" ./catalog-migrate
+${OPM} migrate -o=yaml "${catalog_image}" ./catalog-migrate
 
 # Convert package to basic template
-opm alpha convert-template basic -o=yaml "./catalog-migrate/${package}/catalog.yaml" >"catalog-template.yaml"
+${OPM} alpha convert-template basic -o=yaml "./catalog-migrate/${package}/catalog.yaml" >"catalog-template.yaml"
 rm -r catalog-migrate/
