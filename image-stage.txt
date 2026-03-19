@@ -1,0 +1,1 @@
+quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-21/gatekeeper-operator-bundle-3-21@sha256:f9d3686c9e96486225519b1037dc152eb1f3606d3acb3131aa1c7af80001c6c1
