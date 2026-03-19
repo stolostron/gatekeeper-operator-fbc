@@ -43,7 +43,8 @@ for template_file in catalog-template-v*.yaml; do
   y_stream=${y_stream//./-}
   echo "Adding y-stream to ImageDigestMirrorSet: ${y_stream}"
   yq '.spec.imageDigestMirrors[] |= .mirrors += [.mirrors[0] | sub("[0-9]-[0-9]{2}", "'"${y_stream}"'")]' -i .tekton/images-mirror-set.yaml
-  yq '.spec.imageDigestMirrors[].mirrors |= unique' -i .tekton/images-mirror-set.yaml
+  # Only keep the last 4 mirror entries for each imageDigestMirror
+  yq '(.spec.imageDigestMirrors[].mirrors) |= (unique | (.[-4:] // .))' -i .tekton/images-mirror-set.yaml
 
   # Add bundle
   bundle_entry="
