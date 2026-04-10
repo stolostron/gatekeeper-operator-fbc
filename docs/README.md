@@ -30,9 +30,7 @@ index for the `gatekeeper-operator-product` operator package:
 ## Updating the catalog entries
 
 1. To add or update a staged bundle:
-
    - Adding a bundle:
-
      - Run the [`add-bundle.sh`](../build/add-bundle.sh) script to add catalog entries into
        [`catalog-template.yaml`](../catalog-template.yaml) giving the Konflux bundle image as an
        argument. The image can be found on the Konflux console in the Application in the Components
@@ -43,10 +41,12 @@ index for the `gatekeeper-operator-product` operator package:
        ```
 
    - Updating a bundle SHA:
+     - Replace the old bundle SHA with the new bundle SHA in [`image-stage.txt`](../image-stage.txt)
+       and then run the [`replace-staged-bundle.sh`](../build/replace-staged-bundle.sh) script:
 
-     - Do a repo-wide find/replace for the SHA in question, replacing the old SHA with the new one.
-       Of particular importance are [`image-stage.txt`](../image-stage.txt) and the
-       `catalog-template-v*.yaml` files.
+       ```shell
+       ./build/replace-staged-bundle.sh
+       ```
 
 2. Pruning previous catalogs without compelling reason is not allowed since it's already been
    deployed to customers. However, we can prune catalogs for unreleased versions of OCP.
