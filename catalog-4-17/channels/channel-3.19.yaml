@@ -77,6 +77,9 @@ entries:
   - name: gatekeeper-operator-product.v3.19.1
     replaces: gatekeeper-operator-product.v3.19.0
     skipRange: <3.19.1
+  - name: gatekeeper-operator-product.v3.19.2
+    replaces: gatekeeper-operator-product.v3.19.1
+    skipRange: <3.19.2
 name: "3.19"
 package: gatekeeper-operator-product
 schema: olm.channel
