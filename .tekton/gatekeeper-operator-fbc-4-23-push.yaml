@@ -10,9 +10,9 @@ metadata:
     pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch == "main"
   labels:
     appstudio.openshift.io/application: gatekeeper-operator-fbc
-    appstudio.openshift.io/component: gatekeeper-operator-fbc-4-22
+    appstudio.openshift.io/component: gatekeeper-operator-fbc-4-23
     pipelines.appstudio.openshift.io/type: build
-  name: gatekeeper-operator-fbc-4-22-on-push
+  name: gatekeeper-operator-fbc-4-23-on-push
   namespace: gatekeeper-tenant
 spec:
   params:
@@ -21,7 +21,7 @@ spec:
     - name: revision
       value: '{{revision}}'
     - name: output-image
-      value: quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-fbc-4-22:{{revision}}
+      value: quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-fbc-4-23:{{revision}}
     - name: build-platforms
       value:
         - linux/x86_64
@@ -32,10 +32,10 @@ spec:
       value: catalog.Dockerfile
     - name: build-args
       value:
-        - OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.22
+        - OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.23
         - INPUT_DIR=catalog-4-22
   taskRunTemplate:
-    serviceAccountName: build-pipeline-gatekeeper-operator-fbc-4-22
+    serviceAccountName: build-pipeline-gatekeeper-operator-fbc-4-23
   workspaces:
     - name: git-auth
       secret:
