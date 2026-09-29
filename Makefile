@@ -16,8 +16,15 @@ $(OPM):
 opm: $(OPM)
 	# Checking installation of opm
 	# Setting to v1.61.0 since v1.63.0 adds an unsupported release field to the olm.package in the bundle
-	@current_release_json=$$(curl -s "https://api.github.com/repos/operator-framework/operator-registry/releases/tags/v1.61.0"); \
-	current_release=$$(printf '%s\n' "$${current_release_json}" | jq -r '.tag_name'); \
+	@if ! current_release_json=$$(curl -sSf -H "Accept: application/json" "https://api.github.com/repos/operator-framework/operator-registry/releases/tags/v1.61.0" 2>&1); then \
+		printf "ERROR: Failed to get current OPM release: %s\n" "$${current_release_json}"; \
+		exit 1; \
+	fi; \
+	current_release=$$(printf '%s\n' "$${current_release_json}" | jq -r '.tag_name // ""'); \
+	if [ -z "$${current_release}" ]; then \
+		printf "ERROR: Failed to parse OPM version from JSON response: %s\n" "$${current_release_json}"; \
+		exit 1; \
+	fi; \
 	if ! $(OPM) version || [ "$$($(OPM) version | grep -o "v[0-9]\+\.[0-9]\+\.[0-9]\+" | head -1)" != "$${current_release}" ]; then \
 		echo "Installing opm $${current_release}"; \
 		download_url=$$(printf '%s\n' "$${current_release_json}" | jq -r '.assets[] | select(.name == "$(GOOS)-$(GOARCH)-opm").browser_download_url'); \
