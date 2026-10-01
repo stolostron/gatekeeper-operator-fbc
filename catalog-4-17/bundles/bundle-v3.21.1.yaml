@@ -1,6 +1,6 @@
 ---
-image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:789c49a0b1bdb707358b6682724879d10a86d6c0991cee9ac1eff4cdd7e7c616
-name: gatekeeper-operator-product.v3.19.2
+image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:42790242e0d827a68c34131b41995ccef7e28a8c6e969a232c4322182a569c24
+name: gatekeeper-operator-product.v3.21.1
 package: gatekeeper-operator-product
 properties:
   - type: olm.gvk
@@ -11,7 +11,7 @@ properties:
   - type: olm.package
     value:
       packageName: gatekeeper-operator-product
-      version: 3.19.2
+      version: 3.21.1
   - type: olm.csv.metadata
     value:
       annotations:
@@ -29,7 +29,7 @@ properties:
             }
           ]
         capabilities: Basic Install
-        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:7778ae0dccb42b827ef65a1986c87ae18cb62af21205c4961e09813f5a1bd7e5
+        containerImage: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:21108b429068a3b7d07623bec45de3be42ecfec8e0223b115d6b76a604bab2be
         features.operators.openshift.io/cnf: "false"
         features.operators.openshift.io/cni: "false"
         features.operators.openshift.io/csi: "false"
@@ -40,16 +40,20 @@ properties:
         features.operators.openshift.io/token-auth-aws: "false"
         features.operators.openshift.io/token-auth-azure: "false"
         features.operators.openshift.io/token-auth-gcp: "false"
-        olm.skipRange: <3.19.2
+        olm.skipRange: <3.21.1
         operators.openshift.io/valid-subscription: '["OpenShift Platform Plus", "Red Hat Advanced Cluster Management for Kubernetes"]'
-        operators.operatorframework.io/builder: operator-sdk-v1.34.1
-        operators.operatorframework.io/project_layout: go.kubebuilder.io/v3
+        operators.operatorframework.io/builder: operator-sdk-v1.41.1
+        operators.operatorframework.io/project_layout: go.kubebuilder.io/v4
         repository: https://github.com/stolostron/gatekeeper-operator
         support: Red Hat
       apiServiceDefinitions: {}
       crdDescriptions:
         owned:
-          - description: Gatekeeper is the schema for the gatekeepers API. Gatekeeper contains configurations for the Gatekeeper operator, which deploys Open Policy Agent Gatekeeper, a policy engine that enforces policies through admission controller webhooks. See https://github.com/open-policy-agent/gatekeeper.
+          - description: |-
+              Gatekeeper is the schema for the gatekeepers API. Gatekeeper contains configurations for the Gatekeeper operator,
+              which deploys Open Policy Agent Gatekeeper, a policy engine that enforces policies through admission controller
+              webhooks.
+              See https://github.com/open-policy-agent/gatekeeper.
             displayName: Gatekeeper
             kind: Gatekeeper
             name: gatekeepers.operator.gatekeeper.sh
@@ -58,13 +62,24 @@ properties:
                 name: gatekeeper-deployment
                 version: v1
             specDescriptors:
-              - description: Affinity is a node affinity specification to add to the Gatekeeper deployment Pods. See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/.
+              - description: |-
+                  Affinity is a node affinity specification to add to the Gatekeeper deployment Pods.
+                  See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/.
                 displayName: Affinity
                 path: affinity
-              - description: Audit specifies the configuration for the Gatekeeper auditing function. See https://open-policy-agent.github.io/gatekeeper/website/docs/audit.
+              - description: |-
+                  Audit specifies the configuration for the Gatekeeper auditing function.
+                  See https://open-policy-agent.github.io/gatekeeper/website/docs/audit.
                 displayName: Audit Configuration
                 path: audit
-              - description: Config specifies configurations for the configs.config.gatekeeper.sh API, allowing high-level configuration of Gatekeeper.
+              - description: |-
+                  PodAnnotations is a map of additional annotations to be added to the deployment pods.
+                  When the same keys are defined here and in spec.podAnnotations, these annotations take precedence.
+                displayName: Pod Annotations
+                path: audit.podAnnotations
+              - description: |-
+                  Config specifies configurations for the configs.config.gatekeeper.sh API, allowing
+                  high-level configuration of Gatekeeper.
                 displayName: Config Configuration
                 path: config
               - description: Image specifies the configuration for handling Gatekeeper deployment images.
@@ -72,24 +87,50 @@ properties:
                 path: image
                 x-descriptors:
                   - urn:alm:descriptor:com.tectonic.ui:hidden
-              - description: MutatingWebhook specifies whether the Gatekeeper mutating admission webhook is enabled. The default value is Enabled. See https://open-policy-agent.github.io/gatekeeper/website/docs/mutation.
+              - description: |-
+                  MutatingWebhook specifies whether the Gatekeeper mutating admission webhook is enabled.
+                  The default value is Enabled.
+                  See https://open-policy-agent.github.io/gatekeeper/website/docs/mutation.
                 displayName: Mutating Webhook
                 path: mutatingWebhook
-              - description: NodeSelector is a map of node selectors to add to the Gatekeeper deployment Pods. See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/.
+              - description: |-
+                  MutatingWebhookConfig specifies configuration specific to, or overrides for, the mutating
+                  admission webhook. If this field is empty, the mutating webhook will use the same
+                  configuration as the validating webhook.
+                displayName: Mutating Webhook Config
+                path: mutatingWebhookConfig
+              - description: |-
+                  NodeSelector is a map of node selectors to add to the Gatekeeper deployment Pods.
+                  See https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/.
                 displayName: Node Selector
                 path: nodeSelector
-              - description: PodAnnotations is a map of additional annotations to be added to the Gatekeeper deployment Pods.
+              - description: |-
+                  PodAnnotations is a map of additional annotations to be added to the Gatekeeper deployment
+                  Pods.
                 displayName: Pod Annotations
                 path: podAnnotations
-              - description: Tolerations is an array of tolerations to add to the Gatekeeper deployment Pods. See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/.
+              - description: |-
+                  Tolerations is an array of tolerations to add to the Gatekeeper deployment Pods.
+                  See https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/.
                 displayName: Tolerations
                 path: tolerations
-              - description: ValidatingWebhook specifies whether the Gatekeeper validating admission webhook is enabled. The default value is Enabled.
+              - description: |-
+                  ValidatingWebhook specifies whether the Gatekeeper validating admission webhook is enabled.
+                  The default value is Enabled.
                 displayName: Validating Webhook
                 path: validatingWebhook
-              - description: Webhook specifies the configuration for the Gatekeeper admission webhook.
+              - description: |-
+                  Webhook specifies the configuration for the Gatekeeper webhooks. This includes configurations
+                  common to both the mutating and the validating webhooks, for example the replicas and resources
+                  of the gatekeeper container running the webhooks. The failurePolicy and timeoutSeconds
+                  configurations also override the check-ignore-label webhook.
                 displayName: Webhook Config
                 path: webhook
+              - description: |-
+                  PodAnnotations is a map of additional annotations to be added to the deployment pods.
+                  When the same keys are defined here and in spec.podAnnotations, these annotations take precedence.
+                displayName: Pod Annotations
+                path: webhook.podAnnotations
             version: v1alpha1
       description: |
         Open Policy Agent Gatekeeper enforces CRD-based policies.
@@ -164,10 +205,10 @@ properties:
       provider:
         name: Red Hat
 relatedImages:
-  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:789c49a0b1bdb707358b6682724879d10a86d6c0991cee9ac1eff4cdd7e7c616
+  - image: registry.redhat.io/gatekeeper/gatekeeper-operator-bundle@sha256:42790242e0d827a68c34131b41995ccef7e28a8c6e969a232c4322182a569c24
     name: ""
-  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:b2179c4ca9e795fd368ce9d2d7730a77a2f3966bb9e00fc59c51fd5d71625bb5
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9-operator@sha256:09b84262efaa6fb5a4de9addd1fab6e7d34906209ed867bc30a20daad6779f83
     name: gatekeeper-operator
-  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:7778ae0dccb42b827ef65a1986c87ae18cb62af21205c4961e09813f5a1bd7e5
+  - image: registry.redhat.io/gatekeeper/gatekeeper-rhel9@sha256:21108b429068a3b7d07623bec45de3be42ecfec8e0223b115d6b76a604bab2be
     name: gatekeeper
 schema: olm.bundle
