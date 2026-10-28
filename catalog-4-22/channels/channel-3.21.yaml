@@ -6,6 +6,9 @@ entries:
   - name: gatekeeper-operator-product.v3.21.1
     replaces: gatekeeper-operator-product.v3.21.0
     skipRange: <3.21.1
+  - name: gatekeeper-operator-product.v3.21.2
+    replaces: gatekeeper-operator-product.v3.21.1
+    skipRange: <3.21.2
 name: "3.21"
 package: gatekeeper-operator-product
 schema: olm.channel
