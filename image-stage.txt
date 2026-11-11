@@ -1,3 +1,0 @@
-quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-19/gatekeeper-operator-bundle-3-19@sha256:d07f532a94b6d90530b764d541fd75ee381bf41424c4fc0fb9397075f75ad78f
-quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-20/gatekeeper-operator-bundle-3-20@sha256:21476c975198c96e4839ecd5d9031e649265b3f9c4a37b671179f221b61c2587
-quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-3-21/gatekeeper-operator-bundle-3-21@sha256:6465cf8cd41fcbb3d47b360effa614c674ce2c704631b3a8f004cb6906fe04e1

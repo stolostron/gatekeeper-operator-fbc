@@ -25,3 +25,5 @@ ci-tools/
 __debug_*
 operator.log
 /gatekeeper/
+
+catalog-*/bundles

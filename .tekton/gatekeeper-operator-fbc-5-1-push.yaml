@@ -33,7 +33,7 @@ spec:
     - name: build-args
       value:
         - OPM_IMAGE=registry.redhat.io/openshift5/ose-operator-registry-rhel9:v5.1
-        - INPUT_DIR=catalog-4-22
+        - INPUT_DIR=catalog-5-1
   taskRunTemplate:
     serviceAccountName: build-pipeline-gatekeeper-operator-fbc-5-1
   workspaces:

@@ -1,11 +1,28 @@
 ARG OPM_IMAGE=quay.io/operator-framework/opm:latest
+ARG ASSEMBLY_IMAGE=registry.access.redhat.com/ubi9/ubi-minimal:latest@sha256:ecb40c7bdfa5b0bb71e978c98c7cf56ce38edf1f8fb3561078acbc4b13698c07
+
+# Assemble the selected catalog using its explicit channels and shared bundles.
+FROM ${ASSEMBLY_IMAGE} AS assembly
+USER 0
+ARG INPUT_DIR
+
+WORKDIR /tmp/catalog-workspace
+COPY build/bundle-catalog.sh build/bundle-catalog.sh
+COPY bundles/ bundles/
+COPY bundles-legacy-format/ bundles-legacy-format/
+# This ensures incorrectly cached layers aren't used:
+RUN echo "Assembling ${INPUT_DIR}"
+COPY ./${INPUT_DIR}/ ./${INPUT_DIR}/
+RUN bash build/bundle-catalog.sh "${INPUT_DIR}"
 
 # The builder image is expected to contain /bin/opm (with serve subcommand)
 FROM ${OPM_IMAGE} as builder
 
-# Copy specified FBC catalog into image at /configs and pre-populate serve cache
+# Copy the assembled FBC catalog into /configs, validate it, and pre-populate the serve cache
 ARG INPUT_DIR
-COPY ./${INPUT_DIR}/ /configs/gatekeeper-operator-product
+COPY ./${INPUT_DIR}/ /configs/gatekeeper-operator-product/
+COPY --from=assembly /tmp/catalog-workspace/${INPUT_DIR}/bundles/ /configs/gatekeeper-operator-product/bundles/
+RUN ["/bin/opm", "validate", "/configs"]
 RUN ["/bin/opm", "serve", "/configs", "--cache-dir=/tmp/cache", "--cache-only"]
 
 # The base image is expected to contain /bin/opm (with serve subcommand) and /bin/grpc_health_probe

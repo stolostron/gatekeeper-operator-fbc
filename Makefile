@@ -6,6 +6,7 @@ GOARCH := $(shell go env GOARCH)
 .PHONY: clean
 clean:
 	-rm -rf bin/
+	-rm -rf catalog-*/bundles/
 
 OPM = $(LOCAL_BIN)/opm
 
@@ -35,19 +36,26 @@ opm: $(OPM)
 
 .PHONY: validate-catalog
 validate-catalog:
-	@for catalog in catalog-*/; do \
-		echo "Validating $${catalog} ..."; \
-		$(OPM) validate $${catalog}; \
+	@set -eu; \
+	for catalog in catalog-*/; do \
+		echo "Adding bundles and validating $${catalog} ..."; \
+		catalog_name=$${catalog%/}; \
+		./build/bundle-catalog.sh "$$catalog_name"; \
+		$(OPM) validate "$$catalog_name"; \
 	done
 
 VERSION_TAG ?= latest
 IMG_REPO ?= quay.io/stolostron
 IMAGE_TAG_BASE ?= $(IMG_REPO)/gatekeeper-operator-fbc
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION_TAG)
+CATALOG ?= catalog-5-0
+OPM_IMAGE ?= quay.io/operator-framework/opm:latest
 
 .PHONY: build-image
 build-image:
-	podman build -t $(IMG) -f catalog.Dockerfile --build-arg INPUT_DIR=$$(find catalog-* -type d -maxdepth 0 | head -1) .
+	podman build -t $(IMG) -f catalog.Dockerfile \
+		--build-arg "INPUT_DIR=$(CATALOG)" \
+		--build-arg "OPM_IMAGE=$(OPM_IMAGE)" .
 
 # ref: https://github.com/operator-framework/operator-registry?tab=readme-ov-file#using-the-catalog-locally
 .PHONY: run-image
