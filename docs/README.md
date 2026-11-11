@@ -1,62 +1,65 @@
 # Managing the File Based Catalog
 
-## Initializing the catalog from a current operator index
+## Catalog layout
 
-Use the [build/fetch-catalog.sh](../build/fetch-catalog.sh) script to pulling from the OCP vX.Y
-index for the `gatekeeper-operator-product` operator package:
+Each `catalog-<OCP>/` contains the package metadata and channels for one OCP catalog. Keeping
+channels per catalog makes their bundle selection and upgrade paths explicit. Bundle metadata is
+shared to avoid maintaining duplicate copies:
 
-```bash
-./build/fetch-catalog.sh X.Y gatekeeper-operator-product
-```
+- `bundles/` contains the modern representation.
+- `bundles-legacy-format/` contains the older representation used by OCP 4.14 and 4.16.
 
-## Adding or removing OCP versions
+`build/bundle-catalog.sh` assembles a catalog by copying the bundles named in its channel entries.
+`replaces` and `skips` references alone do not select bundles. Catalog entries and image builds do
+not by themselves establish product support or publication.
 
-1. Update
-   [konflux-release-data](https://gitlab.cee.redhat.com/releng/konflux-release-data/-/tree/main/tenants-config/cluster/stone-prd-rh01/tenants/gatekeeper-tenant),
-   adding or removing OCP versions as needed.
+## Adding a bundle
 
-2. If versions should be updated for an incoming or outgoing OCP version, update the
-   [drop-versions.yaml](../drop-versions.yaml) map, which maps an OCP version to the version of the
-   operator that should be dropped from the catalog.
-
-3. Once PRs from Konflux corresponding to the addition or removal of the application are opened, for
-   additions, run the [`pipeline-patch.sh`](../build/pipeline-patch.sh) script to patch the incoming
-   pipeline with relevant updates:
+1. Obtain the intended bundle image pinned by its actual SHA256 digest. From the repository root,
+   render it with `opm` and `yq`:
 
    ```shell
-   ./build/pipeline-patch.sh
+   ./build/add-bundle.sh <bundle-image>@sha256:<digest>
    ```
 
-## Updating the catalog entries
+   This writes modern metadata to `bundles/`. Set `LEGACY_FORMAT=true` to write legacy metadata
+   to `bundles-legacy-format/` instead; run it twice if both formats are needed. The script defaults
+   to `./bin/opm` and `yq` on `PATH`; `OPM` and `YQ` override those locations. It refuses to
+   overwrite an existing bundle file.
+2. Review the rendered metadata. The script rewrites the bundle's own image reference to
+   `PROD_REPO` (by default `registry.redhat.io/gatekeeper/gatekeeper-operator-bundle`), retaining
+   the digest. Operator and operand references inside the bundle are not rewritten.
+3. ***Manually*** Update the applicable OCP catalogs' version channels and, when appropriate,
+   `stable`, reviewing the `replaces`, `skips` and `skipRange` edges. Keep `stable` a single
+   forward-moving chain; an older stream's patch should not be appended behind a newer stream.
+   Adding a bundle file alone does not put it in a catalog. Preserve previously published bundles
+   and upgrade paths unless that catalog has not been officially published yet.
+4. Review `.tekton/images-mirror-set.yaml` and the staging image references. The script does not
+   update mirrors or channels. The intended staging approach uses production references; verify
+   with QE that digest mirrors make the candidate bundle, operator and operand images available to
+   test clusters.
+5. Validate and build the affected catalogs, review their diffs, and test the staged catalogs and
+   upgrade paths before release.
 
-1. To add or update a staged bundle:
-   - Adding a bundle:
-     - Run the [`add-bundle.sh`](../build/add-bundle.sh) script to add catalog entries into
-       [`catalog-template.yaml`](../catalog-template.yaml) giving the Konflux bundle image as an
-       argument. The image can be found on the Konflux console in the Application in the Components
-       tab. For example:
+For a new staged digest of an existing bundle, the script will not overwrite the existing file.
+Review the replacement metadata and staging references explicitly; there is no automatic staged
+digest replacement workflow in this repository.
 
-       ```shell
-       ./build/add-bundle.sh quay.io/redhat-user-workloads/gatekeeper-tenant/gatekeeper-operator-X-Y/gatekeeper-operator-bundle-X-Y@sha256:<sha>
-       ```
+## Validating and building catalogs
 
-   - Updating a bundle SHA:
-     - Replace the old bundle SHA with the new bundle SHA in [`image-stage.txt`](../image-stage.txt)
-       and then run the [`replace-staged-bundle.sh`](../build/replace-staged-bundle.sh) script:
+Run `make opm` to install the pinned `opm`, then run `make validate-catalog` from the repository
+root. This assembles and validates each catalog. The generated `catalog-*/bundles/` directories
+are ignored by Git, and the assembly script does not remove existing files. Use a clean assembly
+when checking the effects of removed entries so stale files cannot affect validation.
 
-       ```shell
-       ./build/replace-staged-bundle.sh
-       ```
+Build a catalog image with the target OCP version's `opm` image. Read `OPM_IMAGE` from that target's
+`.tekton` build arguments; for example:
 
-2. Pruning previous catalogs without compelling reason is not allowed since it's already been
-   deployed to customers. However, we can prune catalogs for unreleased versions of OCP.
+```shell
+make build-image CATALOG=catalog-4-16 OPM_IMAGE=registry.redhat.io/openshift4/ose-operator-registry-rhel9:v4.16
+```
 
-   Update the OCP version <-> operator version map, [drop-versions.yaml](../drop-versions.yaml),
-   with the version of the operator to drop for any unreleased OCP version.
-
-3. Run the [build/generate-catalog.sh](../build/generate-template.sh) to regenerate the catalog
-   template files and re-render the catalog for the template files:
-
-   ```bash
-   ./build/generate-catalog.sh
-   ```
+`CATALOG` defaults to `catalog-5-0` and `OPM_IMAGE` defaults to upstream `opm:latest`. The
+Dockerfile assembles a fresh catalog, validates it and pre-caches it with the supplied `opm` image.
+A successful build checks catalog compatibility with that `opm` version; it does not prove runtime
+compatibility, support, or a successful Konflux build.
