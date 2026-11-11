@@ -23,20 +23,17 @@ for konflux_file in "${dir}"/gatekeeper-operator-fbc-*.yaml; do
 
   if [[ ${has_build_args} == false ]]; then
     version=$(echo "${konflux_file}" | grep -oE "[0-9]-[0-9]+")
-    for next_version in $(yq 'keys[]' "${dir}/../drop-versions.yaml"); do
-      if [[ $(printf "%s\n%s\n" "${version//-/.}" "${next_version}" | sort --version-sort | tail -1) == "${next_version}" ]]; then
-        catalog_version=${next_version}
-        break
-      fi
-      catalog_version=${next_version}
-    done
+    if [[ ! -d "${dir}/../catalog-${version}" ]]; then
+      echo "error: missing catalog directory catalog-${version}" >&2
+      exit 1
+    fi
 
     yq '.spec.params |= . + [
       {
         "name":"build-args",
         "value":[
           "OPM_IMAGE=registry.redhat.io/openshift'"${version%-*}"'/ose-operator-registry-rhel9:v'"${version//-/.}"'",
-          "INPUT_DIR=catalog-'"${catalog_version//./-}"'"
+          "INPUT_DIR=catalog-'"${version}"'"
         ]
       }]' -i "${konflux_file}"
   fi
