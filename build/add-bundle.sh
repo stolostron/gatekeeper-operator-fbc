@@ -1,86 +1,78 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -euo pipefail
 
-if [[ $(basename "${PWD}") != "gatekeeper-operator-fbc" ]]; then
-  echo "error: Script must be run from the base of the repository."
+if [[ ! "${1:-}" =~ ^[^[:space:]@]+@sha256:[a-f0-9]{64}$ ]]; then
+  echo "error: provide a bundle image pinned by its sha256 digest" >&2
   exit 1
 fi
 
-bundle_image=${1}
+BUNDLE_IMAGE="${1}"
+OPM=${OPM:-./bin/opm}
+YQ=${YQ:-yq}
+PROD_REPO=${PROD_REPO:-registry.redhat.io/gatekeeper/gatekeeper-operator-bundle}
+LEGACY_FORMAT=${LEGACY_FORMAT:-false}
+BUNDLES_DIR="bundles"
+if [[ "${LEGACY_FORMAT}" == "true" ]]; then
+  BUNDLES_DIR="bundles-legacy-format"
+fi
 
-if [[ -z "${bundle_image}" ]]; then
-  echo "error: the bundle image to be added must be provided as a positional argument."
+# Render to a temporary file so the bundle can be checked before copying.
+temporary_file=$(mktemp "${BUNDLES_DIR}/.bundle.XXXXXXXX")
+trap 'rm -f -- "${temporary_file}" "${temporary_file}.bak"' EXIT
+
+if [[ "${LEGACY_FORMAT}" == "true" ]]; then
+  "${OPM}" render "${BUNDLE_IMAGE}" --migrate-level="none" -o yaml >"${temporary_file}"
+else
+  "${OPM}" render "${BUNDLE_IMAGE}" --migrate-level="bundle-object-to-csv-metadata" -o yaml >"${temporary_file}"
+fi
+
+# Rewrite the reference to the added bundle from pre-prod coordinates to the final location.
+bundle_repo="${BUNDLE_IMAGE%@*}"
+bundle_digest="${BUNDLE_IMAGE##*@}"
+if [[ "${bundle_repo}" != "${PROD_REPO}" ]]; then
+  sed -i.bak "s|${bundle_repo}@|${PROD_REPO}@|g" "${temporary_file}"
+  echo "Rewrote ${bundle_repo} to ${PROD_REPO} (digest unchanged)"
+fi
+if ! grep -qF "${PROD_REPO}@${bundle_digest}" "${temporary_file}"; then
+  echo "error: rendered bundle lacks ${PROD_REPO}@${bundle_digest}" >&2
   exit 1
 fi
 
-version=${2}
+schema=$("${YQ}" -r '.schema // ""' "${temporary_file}")
+package=$("${YQ}" -r '.package // ""' "${temporary_file}")
+bundle_name=$("${YQ}" -r '.name // ""' "${temporary_file}")
+modern_count=$("${YQ}" -r '[.properties[] | select(.type == "olm.csv.metadata")] | length' "${temporary_file}")
+legacy_count=$("${YQ}" -r '[.properties[] | select(.type == "olm.bundle.object")] | length' "${temporary_file}")
 
-# Parse bundle
-bundle_json=$(skopeo inspect --override-os=linux --override-arch=amd64 "docker://${bundle_image}")
-bundle_digest=$(echo "${bundle_json}" | jq -r ".Digest")
-bundle_version=$(echo "${bundle_json}" | jq -r ".Labels.version")
-bundle_channels=$(echo "${bundle_json}" | jq -r '.Labels["operators.operatorframework.io.bundle.channels.v1"]')
-
-echo "* Found bundle: ${bundle_digest}"
-echo "* Found version: ${bundle_version}"
-echo "* Found channels: ${bundle_channels}"
-echo "* Overriding version: ${version}"
-
-if [[ -n "${version}" ]]; then
-  bundle_version=${version}
+if [[ "${schema}" != "olm.bundle" || "${package}" != "gatekeeper-operator-product" ]]; then
+  echo "error: expected one Gatekeeper bundle, got schema '${schema}' and package '${package}'" >&2
+  exit 1
+fi
+if [[ ! "${bundle_name}" =~ ^gatekeeper-operator-product[.][0-9A-Za-z._+-]+$ ]]; then
+  echo "error: unexpected bundle name: ${bundle_name}" >&2
+  exit 1
 fi
 
-for template_file in catalog-template-v*.yaml; do
-  if [[ -n $(yq '.entries[] | select(.image == "*'"${bundle_digest}"'")' "${template_file}") ]]; then
-    echo "error: bundle entry already exists."
+if [[ "${LEGACY_FORMAT}" == "true" ]]; then
+  if [[ "${modern_count}" != 0 || "${legacy_count}" == 0 ]]; then
+    echo "error: expected legacy olm.bundle.object without modern metadata" >&2
     exit 1
   fi
+else
+  if [[ "${modern_count}" != 1 || "${legacy_count}" != 0 ]]; then
+    echo "error: expected modern olm.csv.metadata without legacy bundle objects" >&2
+    exit 1
+  fi
+fi
 
-  # Add y-stream to ImageDigestMirrorSet
-  y_stream=${bundle_version#v}
-  y_stream=${y_stream%.*}
-  y_stream=${y_stream//./-}
-  echo "Adding y-stream to ImageDigestMirrorSet: ${y_stream}"
-  yq '.spec.imageDigestMirrors[] |= .mirrors += [.mirrors[0] | sub("[0-9]-[0-9]{2}", "'"${y_stream}"'")]' -i .tekton/images-mirror-set.yaml
-  # Only keep the last 4 mirror entries for each imageDigestMirror
-  yq '(.spec.imageDigestMirrors[].mirrors) |= (unique | (.[-4:] // .))' -i .tekton/images-mirror-set.yaml
+bundle_file="${BUNDLES_DIR}/bundle-${bundle_name#gatekeeper-operator-product.}.yaml"
+if [[ -e "${bundle_file}" || -L "${bundle_file}" ]]; then
+  echo "error: ${bundle_file} already exists; existing files are not overwritten" >&2
+  exit 1
+fi
+cp "${temporary_file}" "${bundle_file}"
+chmod 0644 "${bundle_file}"
 
-  # Add bundle
-  bundle_entry="
-  image: ${bundle_image}
-  schema: olm.bundle
-  " yq '.entries += env(bundle_entry)' -i "${template_file}"
-
-  # Add bundle to channels
-  for channel in ${bundle_channels//,/ }; do
-    echo "  Adding to channel: ${channel}"
-    added_channel=false
-    latest_channel=""
-    if [[ -z $(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'")' "${template_file}") ]]; then
-      added_channel=true
-      latest_channel=$(yq '.entries[] | select(.schema == "olm.channel").name' "${template_file}" | grep -v stable | sort --version-sort | tail -1)
-      new_channel=$(yq '.entries[] | select(.name == "'"${latest_channel}"'") | .name = "'"${channel}"'"' "${template_file}")
-
-      echo "  Creating new ${channel} channel from ${latest_channel}"
-      new_channel=${new_channel} yq '.entries += env(new_channel)' -i "${template_file}"
-    fi
-
-    replaces_version=$(yq '.entries[] | select(.schema == "olm.channel") | select(.name == "'"${channel}"'").entries[-1].name' "${template_file}")
-    channel_entry="
-    name: gatekeeper-operator-product.${bundle_version}
-    replaces: ${replaces_version}
-    skipRange: <${bundle_version#v}
-    " yq '.entries[] |= select(.schema == "olm.channel") |= select(.name == "'"${channel}"'").entries += env(channel_entry)' -i "${template_file}"
-
-    if ${added_channel}; then
-      yq '.entries[] |= select(.name == "'"${channel}"'").entries |= .[-1:]' -i "${template_file}"
-    fi
-  done
-done
-
-echo "* Adding bundle to image-stage.txt ..."
-echo "${bundle_image}" >> image-stage.txt
-
-echo "* Regenerating catalog ..."
-./build/generate-catalog.sh
+echo "Created ${bundle_file}"
+echo "Bundle image reference is ${PROD_REPO}@${bundle_digest}; update and review catalog channels separately."
